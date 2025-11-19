@@ -2,11 +2,11 @@ import 'package:todo_app/models/todo.dart';
 
 class TodoDummy {
   List<Todo> todos = [
-    Todo(id: 1, title: '리스트 스크린 완성'),
-    Todo(id: 2, title: '리스트 스크린 완성'),
-    Todo(id: 3, title: '리스트 스크린 완성'),
-    Todo(id: 4, title: '리스트 스크린 완성'),
-    Todo(id: 5, title: '리스트 스크린 완성'),
+    Todo(id: 1, title: '리스트 화면'),
+    Todo(id: 2, title: '디테일 페이지'),
+    Todo(id: 3, title: '수정/삭제'),
+    Todo(id: 4, title: 'Drift, Hive 적용'),
+    Todo(id: 5, title: '다음 단계'),
   ];
 
   List<Todo> getTodos() {

@@ -48,6 +48,20 @@ class _TodoListScreenState extends State<TodoListScreen> {
           return ListTile(
             leading: Text(todo.id.toString()),
             title: Text(todo.title),
+            onTap: () {},
+            trailing: Container(
+              width: 50,
+              child: Row(
+                children: [
+                  Container(
+                    child: InkWell(child: Icon(Icons.edit), onTap: () {}),
+                  ),
+                  Container(
+                    child: InkWell(child: Icon(Icons.delete), onTap: () {}),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
