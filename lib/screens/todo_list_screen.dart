@@ -1,51 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/screens/todo_create_screen.dart';
-import 'package:todo_app/screens/user_reg_screen.dart';
-import 'package:todo_app/screens/todo_detail_screen.dart';
+import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/providers/todo_dummy.dart';
 
-class TodoListScreen extends StatelessWidget {
+class TodoListScreen extends StatefulWidget {
   const TodoListScreen({super.key});
+
+  @override
+  State<TodoListScreen> createState() => _TodoListScreenState();
+}
+
+class _TodoListScreenState extends State<TodoListScreen> {
+  List<Todo> todos = [];
+  TodoDummy todoDummy = TodoDummy();
+
+  @override
+  void initState() {
+    super.initState();
+    todos = todoDummy.getTodos();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Todo App')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TodoDetailScreen()),
-                );
-              },
-              child: const Text("Detail 화면 이동"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TodoCreateScreen()),
-                );
-              },
-              child: const Text("등록 화면 이동"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UserRegScreen()),
-                );
-              },
-              child: const Text("사용자 등록 화면 이동"),
-            )
-          ],
-        ),
+      appBar: AppBar(
+        title: Text('Todo List'),
+        // actions: [
+        //   InkWell(
+        //     onTap: () {},
+        //     child: Container(
+        //       padding: EdgeInsets.all(5),
+        //       child: Column(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         children: [Icon(Icons.note), Text('미라클 코딩')],
+        //       ),
+        //     ),
+        //   ),
+        // ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Text('+'),
+      ),
+      body: ListView.builder(
+        itemCount: todos.length,
+        itemBuilder: (context, index) {
+          final todo = todos[index];
+          return ListTile(
+            leading: Text(todo.id.toString()),
+            title: Text(todo.title),
+          );
+        },
       ),
     );
   }
