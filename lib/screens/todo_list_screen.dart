@@ -110,6 +110,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
       ),
 
       floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         onPressed: () {
           Navigator.push(
             context,

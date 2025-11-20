@@ -4,17 +4,21 @@ import 'package:flutter/material.dart';
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
   // 아이콘 색상
-  primary: Color(0xFF000000),
+  primary: Color(0xFF5D86DB),
   onPrimary: Color(0xFFFFFFFF),
-  secondary: Color(0xFF6EAEE7),
+  secondary: Color(0xFFF5C538),
   onSecondary: Color(0xFFFFFFFF),
-  error: Color(0xFFBA1A1A),
+  tertiary: Color(0xFFB0DB4B),
+  onTertiary: Color(0xFFFFFFFF),
+  error: Color(0xFFF54263),
   onError: Color(0xFFFFFFFF),
-  background: Color(0xFFFDFDFD),
+  background: Color(0xFFF7F9FC),
   onBackground: Color(0xFF1A1C18),
   shadow: Color(0xFF000000),
-  outlineVariant: Color(0xFFFFFFFF),
+  outline: Color(0xFFE0E3E7),
+  outlineVariant: Color(0xFFF1F3F5),
   surface: Color(0xFFFFFFFF),
+  surfaceTint: Color(0xFF0E61F6),
   onSurface: Color(0xFF1A1C18),
 );
 /* ✅다크 모드 */
