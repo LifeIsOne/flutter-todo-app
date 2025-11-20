@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/screens/test_screen.dart';
 import 'package:todo_app/screens/todo_create_screen.dart';
 import 'package:todo_app/screens/todo_detail_screen.dart';
 import 'package:todo_app/screens/todo_list_screen.dart';
@@ -38,6 +39,15 @@ class TestHomePage extends StatelessWidget {
                 );
               },
               child: const Text("등록 화면 이동"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TestScreen()),
+                );
+              },
+              child: const Text("테스트 화면"),
             ),
             ElevatedButton(
               onPressed: () {
