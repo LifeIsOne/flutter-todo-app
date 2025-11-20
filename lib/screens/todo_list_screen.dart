@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/providers/todo_dummy.dart';
+import 'package:todo_app/screens/todo_create_screen.dart';
+import 'package:todo_app/screens/todo_detail_screen.dart';
 
 class TodoListScreen extends StatefulWidget {
   const TodoListScreen({super.key});
@@ -37,18 +39,27 @@ class _TodoListScreenState extends State<TodoListScreen> {
         //   ),
         // ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Text('+'),
-      ),
       body: ListView.builder(
         itemCount: todos.length,
         itemBuilder: (context, index) {
           final todo = todos[index];
           return ListTile(
-            leading: Text(todo.id.toString()),
+            // leading: Text(todo.id.toString()),
+            leading: Image.asset(
+              'assets/images/todo/interface-and-abstract-class.png',
+              width: 40,
+              height: 40,
+            ),
             title: Text(todo.title),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TodoDetailScreen(),
+                ),
+              );
+            },
+            // 수정•삭제
             trailing: Container(
               width: 50,
               child: Row(
@@ -57,13 +68,55 @@ class _TodoListScreenState extends State<TodoListScreen> {
                     child: InkWell(child: Icon(Icons.edit), onTap: () {}),
                   ),
                   Container(
-                    child: InkWell(child: Icon(Icons.delete), onTap: () {}),
+                    child: InkWell(
+                      child: Icon(Icons.delete),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Delete Todo'),
+                              content: Container(child: Text('삭제하시겠습니까?')),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      todoDummy.deleteTodo(
+                                        todos[index].id ?? 0,
+                                      );
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('삭제하기'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('취소하기'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
           );
         },
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TodoCreateScreen()),
+          );
+        },
+        child: Text('+'),
       ),
     );
   }

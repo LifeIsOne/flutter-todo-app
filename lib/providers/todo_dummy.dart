@@ -23,7 +23,16 @@ class TodoDummy {
     return newTodo;
   }
 
-  void deleteTodo(int id) {}
+  void deleteTodo(int id) {
+    todos.removeWhere((todo) => todo.id == id);
+  }
 
-  void updateTodo(int id) {}
+  void updateTodo(int id, String newTitle) {
+    for (int i = 0; i < todos.length; i++) {
+      if (todos[i].id == id) {
+        todos[i] = Todo(id: id, title: newTitle);
+        break;
+      }
+    }
+  }
 }
