@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/providers/todo_dummy.dart';
-import 'package:todo_app/screens/todo_create_screen.dart';
-import 'package:todo_app/screens/todo_detail_screen.dart';
+import 'package:todo_app/widgets/header.dart';
+import 'package:todo_app/widgets/todo_search_bar.dart';
+
+import '../widgets/select_tag.dart';
+import '../widgets/todo_list.dart';
 
 class TodoListScreen extends StatefulWidget {
   const TodoListScreen({super.key});
@@ -12,6 +15,8 @@ class TodoListScreen extends StatefulWidget {
 }
 
 class _TodoListScreenState extends State<TodoListScreen> {
+  List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
+  String? selectedTag;
   List<Todo> todos = [];
   TodoDummy todoDummy = TodoDummy();
 
@@ -24,101 +29,64 @@ class _TodoListScreenState extends State<TodoListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Todo List'),
-        // actions: [
-        //   InkWell(
-        //     onTap: () {},
-        //     child: Container(
-        //       padding: EdgeInsets.all(5),
-        //       child: Column(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: [Icon(Icons.note), Text('미라클 코딩')],
-        //       ),
-        //     ),
-        //   ),
-        // ],
-      ),
-      body: ListView.builder(
-        itemCount: todos.length,
-        itemBuilder: (context, index) {
-          final todo = todos[index];
-          return ListTile(
-            // leading: Text(todo.id.toString()),
-            leading: Image.asset(
-              'assets/images/todo/interface-and-abstract-class.png',
-              width: 40,
-              height: 40,
-            ),
-            title: Text(todo.title),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TodoDetailScreen(),
-                ),
-              );
+      backgroundColor: const Color(0xFFF7F7F7),
+      body: Column(
+        children: [
+          const SizedBox(height: 80),
+          const Header(), // title, 사용자 이름, 프로필 이미지
+          // 검색 바
+          const TodoSearchBar(),
+          // 태그
+          SelectTag(
+            tagOptions: tagOptions,
+            selectedTag: selectedTag,
+            onTagSelected: (tag) {
+              setState(() {
+                selectedTag = tag;
+              });
             },
-            // 수정•삭제
-            trailing: Container(
-              width: 50,
-              child: Row(
-                children: [
-                  Container(
-                    child: InkWell(child: Icon(Icons.edit), onTap: () {}),
-                  ),
-                  Container(
-                    child: InkWell(
-                      child: Icon(Icons.delete),
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Delete Todo'),
-                              content: Container(child: Text('삭제하시겠습니까?')),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      todoDummy.deleteTodo(
-                                        todos[index].id ?? 0,
-                                      );
-                                    });
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('삭제하기'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('취소하기'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+          ),
+          //  리스트 빌드
+          Expanded(
+            child: TodoList(
+              todos: todos,
+              onTodoDeleted: (todo) {
+                _showDeleteDialog(todo);
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
+    );
+  }
 
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => TodoCreateScreen()),
-          );
-        },
-        child: Text('+'),
-      ),
+  void _showDeleteDialog(Todo todo) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Todo'),
+          content: const Text('삭제하시겠습니까?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  todoDummy.deleteTodo(todo.id ?? 0);
+                  todos.remove(todo);
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('삭제하기'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('취소하기'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

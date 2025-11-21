@@ -1,64 +1,116 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/providers/todo_dummy.dart';
+import 'package:todo_app/screens/todo_create_screen.dart';
+
+import '../widgets/todo_list.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({super.key});
 
   @override
-  State<TestScreen> createState() => _TestScreenState();
+  State<TestScreen> createState() => _TodoListScreenState();
 }
 
-class _TestScreenState extends State<TestScreen> {
-  File? _imageFile;
-  final ImagePicker _picker = ImagePicker();
+class _TodoListScreenState extends State<TestScreen> {
+  List<Todo> todos = [];
+  TodoDummy todoDummy = TodoDummy();
 
-  Future<void> pickFromGallery() async {
-    final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        _imageFile = File(picked.path);
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    todos = todoDummy.getTodos();
   }
 
-  Future<void> pickFromCamera() async {
-    final XFile? picked = await _picker.pickImage(source: ImageSource.camera);
-    if (picked != null) {
-      setState(() {
-        _imageFile = File(picked.path);
-      });
-    }
+  void _showDeleteDialog(Todo todo) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Todo'),
+          content: const Text('삭제하시겠습니까?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  todoDummy.deleteTodo(todo.id ?? 0);
+                  // UI 즉각적인 업데이트를 위해 로컬 리스트에서도 삭제
+                  todos.remove(todo);
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('삭제하기'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('취소하기'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Image Test Screen")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _imageFile == null
-                ? const Text("이미지가 선택되지 않았습니다.")
-                : SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: Image.file(_imageFile!, fit: BoxFit.cover),
-                  ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: pickFromGallery,
-              child: const Text("갤러리에서 사진 선택"),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: pickFromCamera,
-              child: const Text("카메라로 촬영"),
-            ),
-          ],
+      backgroundColor: const Color(0xFFF7F7F7),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center, // ★ 같은 라인에 맞추는 핵심
+            children: <Widget>[
+              const Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Todo Lists',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      '사용자',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: Image.asset('assets/design_course/userImage.png'),
+              ),
+            ],
+          ),
         ),
+      ),
+      body: TodoList(
+        todos: todos,
+        onTodoDeleted: (todo) {
+          _showDeleteDialog(todo);
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TodoCreateScreen()),
+          );
+        },
+        child: const Text('+'),
       ),
     );
   }
