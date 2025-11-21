@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/screens/todo_detail_screen.dart';
@@ -16,11 +18,14 @@ class TodoList extends StatelessWidget {
         itemBuilder: (context, index) {
           final todo = todos[index];
           return ListTile(
-            leading: Image.asset(
-              'assets/images/todo/interface-and-abstract-class.png',
-              width: 40,
-              height: 40,
-            ),
+            leading: todo.todoImg == null
+                ? Image.asset(
+                    'assets/images/todo/files.png',
+                    width: 40,
+                    height: 40,
+                  )
+                : Image.file(File(todo.todoImg!), width: 40, height: 40),
+
             title: Text(todo.title),
             onTap: () {
               Navigator.push(
