@@ -1,18 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/_core/theme.dart';
+import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/providers/todo_provider.dart';
 import 'package:todo_app/screens/todo_list_screen.dart';
 
-class TodoCreateScreen extends StatefulWidget {
+class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
 
   @override
-  State<TodoCreateScreen> createState() => _TodoCreateScreenState();
+  ConsumerState<TodoCreateScreen> createState() => _TodoCreateScreenState();
 }
 
-class _TodoCreateScreenState extends State<TodoCreateScreen> {
+class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   final ImagePicker picker = ImagePicker();
   String title = '';
   File? imgFile;
@@ -50,6 +53,18 @@ class _TodoCreateScreenState extends State<TodoCreateScreen> {
   // Function 추가하기
   void onSubmit() {
     print('추가하기: $title, $imgFile');
+
+    final newTodo = Todo(
+      id: null,
+      // 더미에서
+      title: title,
+      todoImg: imgFile?.path,
+      tags: selectedTags,
+      createAt: DateTime.now(),
+      updateAt: DateTime.now(),
+    );
+
+    ref.read(todoProvider.notifier).add(newTodo);
 
     Navigator.pushReplacement(
       context,

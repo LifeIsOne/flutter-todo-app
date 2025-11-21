@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/providers/todo_dummy.dart';
+import 'package:todo_app/providers/todo_provider.dart';
 import 'package:todo_app/screens/todo_create_screen.dart';
 import 'package:todo_app/widgets/header.dart';
 import 'package:todo_app/widgets/todo_search_bar.dart';
@@ -8,34 +9,25 @@ import 'package:todo_app/widgets/todo_search_bar.dart';
 import '../widgets/select_tag.dart';
 import '../widgets/todo_list.dart';
 
-class TodoListScreen extends StatefulWidget {
+class TodoListScreen extends ConsumerStatefulWidget {
   const TodoListScreen({super.key});
 
   @override
-  State<TodoListScreen> createState() => _TodoListScreenState();
+  ConsumerState<TodoListScreen> createState() => _TodoListScreenState();
 }
 
-class _TodoListScreenState extends State<TodoListScreen> {
+class _TodoListScreenState extends ConsumerState<TodoListScreen> {
   List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
   String? selectedTag;
-  List<Todo> todos = [];
-  TodoDummy todoDummy = TodoDummy();
-
-  List<Todo> get filteredTodos {
-    if (selectedTag == null) {
-      return todos;
-    }
-    return todos.where((item) => item.tags.contains(selectedTag)).toList();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    todos = todoDummy.getTodos();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final todos = ref.watch(todoProvider);
+
+    final filteredTodos = selectedTag == null
+        ? todos
+        : todos.where((todo) => todo.tags.contains(selectedTag)).toList();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       body: Column(
@@ -93,10 +85,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                setState(() {
-                  todoDummy.deleteTodo(todo.id ?? 0);
-                  todos.remove(todo);
-                });
+                ref.read(todoProvider.notifier).remove(todo.id!);
                 Navigator.of(context).pop();
               },
               child: const Text('삭제하기'),

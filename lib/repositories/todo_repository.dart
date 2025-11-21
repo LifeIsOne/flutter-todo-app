@@ -1,7 +1,7 @@
 import 'package:todo_app/models/todo.dart';
 
-class TodoDummy {
-  List<Todo> todos = [
+class TodoRepository {
+  final List<Todo> todos = [
     Todo(id: 1, title: '추상화 인터페이스 공부', tags: ['공부', '중요']),
     Todo(id: 2, title: '뜀 걸음 40분 이상', tags: ['운동']),
     Todo(id: 3, title: '저녁거리 사기', tags: ['장보기', '중요']),
@@ -10,17 +10,25 @@ class TodoDummy {
   ];
 
   List<Todo> getTodos() {
-    return todos;
+    return [...todos];
   }
 
-  Todo getTodo(int id) {
-    return todos[id];
-  }
+  // void getTodo(Todo todo) {
+  //   todos = [...todos, todo];
+  // }
 
-  Todo addTodo(Todo todo) {
-    Todo newTodo = Todo(id: todos.length + 1, title: todo.title);
+  void addTodo(Todo todo) {
+    // 타입 생략
+    final newTodo = Todo(
+      id: todos.length + 1,
+      title: todo.title,
+      todoImg: todo.todoImg,
+      tags: todo.tags,
+      createAt: DateTime.now(),
+      updateAt: DateTime.now(),
+    );
+
     todos.add(newTodo);
-    return newTodo;
   }
 
   void deleteTodo(int id) {
