@@ -19,7 +19,25 @@ class _TodoCreateScreenState extends State<TodoCreateScreen> {
   List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
   List<String> selectedTags = [];
 
-  // 이미지 등록
+  // DatePicker
+  DateTime? dueDate;
+
+  Future<void> pickDueDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      setState(() {
+        dueDate = picked;
+      });
+    }
+  }
+
+  // Function 이미지 등록
   Future<void> pickFromGallery() async {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
@@ -29,7 +47,7 @@ class _TodoCreateScreenState extends State<TodoCreateScreen> {
     }
   }
 
-  // 추가하기
+  // Function 추가하기
   void onSubmit() {
     print('추가하기: $title, $imgFile');
 
@@ -116,6 +134,20 @@ class _TodoCreateScreenState extends State<TodoCreateScreen> {
                     );
                   }).toList(),
                 ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  dueDate == null
+                      ? '마감일 선택 안됨'
+                      : '마감일: ${dueDate!.year}-${dueDate!.month}-${dueDate!.day}',
+                ),
+                ElevatedButton(onPressed: pickDueDate, child: Text('날짜 선택')),
               ],
             ),
           ),
