@@ -2,7 +2,7 @@ class Todo {
   final int? id;
   final String title;
   final String? todoImg;
-  final List<String>? tag;
+  final List<String> tags;
   final DateTime? createAt;
   final DateTime? updateAt;
 
@@ -10,7 +10,7 @@ class Todo {
     required this.id,
     required this.title,
     this.todoImg,
-    this.tag,
+    this.tags = const [],
     this.createAt,
     this.updateAt,
   });
@@ -20,7 +20,7 @@ class Todo {
       id: map['id'],
       title: map['title'],
       todoImg: map['todoImg'],
-      tag: List<String>.from(map['tag'] ?? []),
+      tags: List<String>.from(map['tags'] ?? []),
       createAt: map['createAt'],
       updateAt: map['updateAt'],
     );
@@ -31,7 +31,7 @@ class Todo {
       'id': id,
       'title': title,
       'todoImg': todoImg,
-      'tag': tag,
+      'tags': tags,
       'createAt': createAt,
       'updateAt': updateAt,
     };

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/providers/todo_dummy.dart';
+import 'package:todo_app/screens/todo_create_screen.dart';
 import 'package:todo_app/widgets/header.dart';
 import 'package:todo_app/widgets/todo_search_bar.dart';
 
@@ -19,6 +20,13 @@ class _TodoListScreenState extends State<TodoListScreen> {
   String? selectedTag;
   List<Todo> todos = [];
   TodoDummy todoDummy = TodoDummy();
+
+  List<Todo> get filteredTodos {
+    if (selectedTag == null) {
+      return todos;
+    }
+    return todos.where((item) => item.tags.contains(selectedTag)).toList();
+  }
 
   @override
   void initState() {
@@ -42,20 +50,35 @@ class _TodoListScreenState extends State<TodoListScreen> {
             selectedTag: selectedTag,
             onTagSelected: (tag) {
               setState(() {
-                selectedTag = tag;
+                if (selectedTag == tag) {
+                  selectedTag = null;
+                } else {
+                  selectedTag = tag;
+                }
               });
             },
           ),
           //  리스트 빌드
           Expanded(
             child: TodoList(
-              todos: todos,
+              todos: filteredTodos,
               onTodoDeleted: (todo) {
                 _showDeleteDialog(todo);
               },
             ),
           ),
         ],
+      ),
+      // 추가하기 버튼
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TodoCreateScreen()),
+          );
+        },
+        child: const Text('+'),
       ),
     );
   }

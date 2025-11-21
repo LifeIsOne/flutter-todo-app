@@ -2,10 +2,10 @@ import 'package:todo_app/models/todo.dart';
 
 class TodoDummy {
   List<Todo> todos = [
-    Todo(id: 1, title: '리스트 화면'),
-    Todo(id: 2, title: '디테일 페이지'),
-    Todo(id: 3, title: '수정/삭제'),
-    Todo(id: 4, title: 'Drift, Hive 적용'),
+    Todo(id: 1, title: '추상화 인터페이스 공부', tags: ['공부', '중요']),
+    Todo(id: 2, title: '뜀 걸음 40분 이상', tags: ['운동']),
+    Todo(id: 3, title: '저녁거리 사기', tags: ['장보기', '중요']),
+    Todo(id: 4, title: 'Drift, Hive 적용', tags: ['개발']),
     Todo(id: 5, title: '다음 단계'),
   ];
 
