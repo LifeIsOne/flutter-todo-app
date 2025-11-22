@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/screens/todo_detail_screen.dart';
 
 class TodoList extends StatelessWidget {
-  final List<Todo> todos;
-  final Function(Todo) onTodoDeleted;
+  final List<TodoData> todos;
+  final Function(TodoData todo) onTodoDeleted;
 
   const TodoList({super.key, required this.todos, required this.onTodoDeleted});
 
@@ -48,7 +48,7 @@ class TodoList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TodoDetailScreen(todoId: todo.id!),
+                  builder: (context) => TodoDetailScreen(todoId: todo.id),
                 ),
               );
             },

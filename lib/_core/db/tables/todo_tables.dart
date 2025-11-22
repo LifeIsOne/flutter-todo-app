@@ -9,14 +9,15 @@ class Todo extends Table {
 
   TextColumn get todoImg => text().nullable()();
 
-  TextColumn get tags => text().map(const StringListConverter())();
+  TextColumn get tags => text().map(const StringListConverter()).nullable()();
 
   DateTimeColumn get dueDate => dateTime().nullable()();
 
   DateTimeColumn get createAt =>
       dateTime().clientDefault(() => DateTime.now().toUtc())();
 
-  DateTimeColumn get updateAt => dateTime()();
+  DateTimeColumn get updateAt =>
+      dateTime().clientDefault(() => DateTime.now().toUtc())();
 }
 
 class StringListConverter extends TypeConverter<List<String>, String> {

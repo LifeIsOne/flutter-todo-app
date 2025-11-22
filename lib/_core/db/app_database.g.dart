@@ -42,14 +42,14 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
     requiredDuringInsert: false,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<List<String>, String> tags =
+  late final GeneratedColumnWithTypeConverter<List<String>?, String> tags =
       GeneratedColumn<String>(
         'tags',
         aliasedName,
-        false,
+        true,
         type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      ).withConverter<List<String>>($TodoTable.$convertertags);
+        requiredDuringInsert: false,
+      ).withConverter<List<String>?>($TodoTable.$convertertagsn);
   static const VerificationMeta _dueDateMeta = const VerificationMeta(
     'dueDate',
   );
@@ -82,7 +82,8 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now().toUtc(),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -140,8 +141,6 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
         _updateAtMeta,
         updateAt.isAcceptableOrUnknown(data['update_at']!, _updateAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_updateAtMeta);
     }
     return context;
   }
@@ -164,11 +163,11 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
         DriftSqlType.string,
         data['${effectivePrefix}todo_img'],
       ),
-      tags: $TodoTable.$convertertags.fromSql(
+      tags: $TodoTable.$convertertagsn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}tags'],
-        )!,
+        ),
       ),
       dueDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -192,13 +191,15 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
 
   static TypeConverter<List<String>, String> $convertertags =
       const StringListConverter();
+  static TypeConverter<List<String>?, String?> $convertertagsn =
+      NullAwareTypeConverter.wrap($convertertags);
 }
 
 class TodoData extends DataClass implements Insertable<TodoData> {
   final int id;
   final String title;
   final String? todoImg;
-  final List<String> tags;
+  final List<String>? tags;
   final DateTime? dueDate;
   final DateTime createAt;
   final DateTime updateAt;
@@ -206,7 +207,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     required this.id,
     required this.title,
     this.todoImg,
-    required this.tags,
+    this.tags,
     this.dueDate,
     required this.createAt,
     required this.updateAt,
@@ -219,8 +220,8 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     if (!nullToAbsent || todoImg != null) {
       map['todo_img'] = Variable<String>(todoImg);
     }
-    {
-      map['tags'] = Variable<String>($TodoTable.$convertertags.toSql(tags));
+    if (!nullToAbsent || tags != null) {
+      map['tags'] = Variable<String>($TodoTable.$convertertagsn.toSql(tags));
     }
     if (!nullToAbsent || dueDate != null) {
       map['due_date'] = Variable<DateTime>(dueDate);
@@ -237,7 +238,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
       todoImg: todoImg == null && nullToAbsent
           ? const Value.absent()
           : Value(todoImg),
-      tags: Value(tags),
+      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
       dueDate: dueDate == null && nullToAbsent
           ? const Value.absent()
           : Value(dueDate),
@@ -255,7 +256,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       todoImg: serializer.fromJson<String?>(json['todoImg']),
-      tags: serializer.fromJson<List<String>>(json['tags']),
+      tags: serializer.fromJson<List<String>?>(json['tags']),
       dueDate: serializer.fromJson<DateTime?>(json['dueDate']),
       createAt: serializer.fromJson<DateTime>(json['createAt']),
       updateAt: serializer.fromJson<DateTime>(json['updateAt']),
@@ -268,7 +269,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'todoImg': serializer.toJson<String?>(todoImg),
-      'tags': serializer.toJson<List<String>>(tags),
+      'tags': serializer.toJson<List<String>?>(tags),
       'dueDate': serializer.toJson<DateTime?>(dueDate),
       'createAt': serializer.toJson<DateTime>(createAt),
       'updateAt': serializer.toJson<DateTime>(updateAt),
@@ -279,7 +280,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     int? id,
     String? title,
     Value<String?> todoImg = const Value.absent(),
-    List<String>? tags,
+    Value<List<String>?> tags = const Value.absent(),
     Value<DateTime?> dueDate = const Value.absent(),
     DateTime? createAt,
     DateTime? updateAt,
@@ -287,7 +288,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     id: id ?? this.id,
     title: title ?? this.title,
     todoImg: todoImg.present ? todoImg.value : this.todoImg,
-    tags: tags ?? this.tags,
+    tags: tags.present ? tags.value : this.tags,
     dueDate: dueDate.present ? dueDate.value : this.dueDate,
     createAt: createAt ?? this.createAt,
     updateAt: updateAt ?? this.updateAt,
@@ -338,7 +339,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
   final Value<int> id;
   final Value<String> title;
   final Value<String?> todoImg;
-  final Value<List<String>> tags;
+  final Value<List<String>?> tags;
   final Value<DateTime?> dueDate;
   final Value<DateTime> createAt;
   final Value<DateTime> updateAt;
@@ -355,13 +356,11 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     this.id = const Value.absent(),
     required String title,
     this.todoImg = const Value.absent(),
-    required List<String> tags,
+    this.tags = const Value.absent(),
     this.dueDate = const Value.absent(),
     this.createAt = const Value.absent(),
-    required DateTime updateAt,
-  }) : title = Value(title),
-       tags = Value(tags),
-       updateAt = Value(updateAt);
+    this.updateAt = const Value.absent(),
+  }) : title = Value(title);
   static Insertable<TodoData> custom({
     Expression<int>? id,
     Expression<String>? title,
@@ -386,7 +385,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     Value<int>? id,
     Value<String>? title,
     Value<String?>? todoImg,
-    Value<List<String>>? tags,
+    Value<List<String>?>? tags,
     Value<DateTime?>? dueDate,
     Value<DateTime>? createAt,
     Value<DateTime>? updateAt,
@@ -416,7 +415,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     }
     if (tags.present) {
       map['tags'] = Variable<String>(
-        $TodoTable.$convertertags.toSql(tags.value),
+        $TodoTable.$convertertagsn.toSql(tags.value),
       );
     }
     if (dueDate.present) {
@@ -463,17 +462,17 @@ typedef $$TodoTableCreateCompanionBuilder =
       Value<int> id,
       required String title,
       Value<String?> todoImg,
-      required List<String> tags,
+      Value<List<String>?> tags,
       Value<DateTime?> dueDate,
       Value<DateTime> createAt,
-      required DateTime updateAt,
+      Value<DateTime> updateAt,
     });
 typedef $$TodoTableUpdateCompanionBuilder =
     TodoCompanion Function({
       Value<int> id,
       Value<String> title,
       Value<String?> todoImg,
-      Value<List<String>> tags,
+      Value<List<String>?> tags,
       Value<DateTime?> dueDate,
       Value<DateTime> createAt,
       Value<DateTime> updateAt,
@@ -502,11 +501,11 @@ class $$TodoTableFilterComposer extends Composer<_$AppDatabase, $TodoTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<List<String>, List<String>, String> get tags =>
-      $composableBuilder(
-        column: $table.tags,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
+  ColumnWithTypeConverterFilters<List<String>?, List<String>, String>
+  get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
 
   ColumnFilters<DateTime> get dueDate => $composableBuilder(
     column: $table.dueDate,
@@ -586,7 +585,7 @@ class $$TodoTableAnnotationComposer
   GeneratedColumn<String> get todoImg =>
       $composableBuilder(column: $table.todoImg, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<List<String>, String> get tags =>
+  GeneratedColumnWithTypeConverter<List<String>?, String> get tags =>
       $composableBuilder(column: $table.tags, builder: (column) => column);
 
   GeneratedColumn<DateTime> get dueDate =>
@@ -630,7 +629,7 @@ class $$TodoTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String?> todoImg = const Value.absent(),
-                Value<List<String>> tags = const Value.absent(),
+                Value<List<String>?> tags = const Value.absent(),
                 Value<DateTime?> dueDate = const Value.absent(),
                 Value<DateTime> createAt = const Value.absent(),
                 Value<DateTime> updateAt = const Value.absent(),
@@ -648,10 +647,10 @@ class $$TodoTableTableManager
                 Value<int> id = const Value.absent(),
                 required String title,
                 Value<String?> todoImg = const Value.absent(),
-                required List<String> tags,
+                Value<List<String>?> tags = const Value.absent(),
                 Value<DateTime?> dueDate = const Value.absent(),
                 Value<DateTime> createAt = const Value.absent(),
-                required DateTime updateAt,
+                Value<DateTime> updateAt = const Value.absent(),
               }) => TodoCompanion.insert(
                 id: id,
                 title: title,

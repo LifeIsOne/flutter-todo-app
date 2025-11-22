@@ -40,7 +40,7 @@ class _UserRegScreenState extends State<UserRegScreen> {
 
       body: Column(
         children: [
-          // 사용자 이미지 영역
+          // 사용자 아바타
           GestureDetector(
             onTap: pickProfileImg,
             child: CircleAvatar(
