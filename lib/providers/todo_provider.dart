@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/repositories/todo_repository.dart';
 
@@ -18,6 +19,15 @@ class TodoNotifier extends StateNotifier<List<Todo>> {
       updateAt: todo.updateAt,
     );
     state = [...state, newTodo];
+  }
+
+  void createTodo(TodoData todo) {
+    final newTodo = TodoData(
+      id: todo.id,
+      title: todo.title,
+      createAt: todo.createAt,
+      updateAt: todo.createAt,
+    );
   }
 
   void remove(int id) {

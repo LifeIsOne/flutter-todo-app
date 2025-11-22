@@ -22,7 +22,6 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // drift
     final todosAsync = ref.watch(todoListProvider);
 
     return todosAsync.when(

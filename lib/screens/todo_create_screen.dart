@@ -1,12 +1,12 @@
 import 'dart:io';
 
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/_core/theme.dart';
-import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/providers/todo_provider.dart';
-import 'package:todo_app/screens/todo_list_screen.dart';
+import 'package:todo_app/providers/db_provider.dart';
 
 class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
@@ -85,22 +85,22 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
       );
     }
 
-    final newTodo = Todo(
-      id: null,
-      title: title,
-      todoImg: imgFile?.path,
-      tags: selectedTags,
-      dueDate: SumDue,
-      createAt: DateTime.now(),
-      updateAt: DateTime.now(),
+    final newTodo = TodoCompanion(
+      title: Value(title),
+      todoImg: Value(imgFile?.path),
+      tags: Value(selectedTags),
+      dueDate: Value(SumDue),
+      createAt: Value(DateTime.now()),
+      updateAt: Value(DateTime.now()),
     );
 
-    ref.read(todoProvider.notifier).add(newTodo);
+    ref.read(todoDaoProvider).insertTodo(newTodo);
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => TodoListScreen()),
-    );
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (_) => TodoListScreen()),
+    // );
+    Navigator.of(context).pop();
   }
 
   @override

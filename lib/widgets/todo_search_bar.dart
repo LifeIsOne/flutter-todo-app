@@ -9,7 +9,7 @@ class TodoSearchBar extends StatelessWidget {
       padding: const EdgeInsetsGeometry.all(8),
       child: Row(
         // mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: MediaQuery.of(context).size.width * 0.8,
