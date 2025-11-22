@@ -12,12 +12,29 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-        itemCount: todos.length,
-        itemBuilder: (context, index) {
-          final todo = todos[index];
-          return ListTile(
+    return ListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: todos.length,
+      itemBuilder: (context, index) {
+        final todo = todos[index];
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Color(0x22000000), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x11000000),
+                offset: Offset(0, 5),
+                spreadRadius: 1,
+                blurRadius: 5,
+              ),
+            ],
+          ),
+
+          child: ListTile(
             leading: todo.todoImg == null
                 ? Image.asset(
                     'assets/images/todo/default.png',
@@ -48,9 +65,9 @@ class TodoList extends StatelessWidget {
                 ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
