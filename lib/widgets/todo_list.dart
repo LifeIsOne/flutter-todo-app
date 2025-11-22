@@ -53,11 +53,10 @@ class TodoList extends StatelessWidget {
               );
             },
             trailing: SizedBox(
-              width: 50,
+              width: 25,
               child: Row(
                 children: [
-                  InkWell(child: const Icon(Icons.edit), onTap: () {}),
-
+                  // InkWell(child: const Icon(Icons.edit), onTap: () {}),
                   InkWell(
                     child: const Icon(Icons.delete),
                     onTap: () => onTodoDeleted(todo),
