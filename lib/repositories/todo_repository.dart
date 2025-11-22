@@ -23,6 +23,7 @@ class TodoRepository {
       title: todo.title,
       todoImg: todo.todoImg,
       tags: todo.tags,
+      dueDate: todo.dueDate,
       createAt: DateTime.now(),
       updateAt: DateTime.now(),
     );

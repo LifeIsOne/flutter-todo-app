@@ -13,6 +13,7 @@ class TodoNotifier extends StateNotifier<List<Todo>> {
       title: todo.title,
       todoImg: todo.todoImg,
       tags: todo.tags,
+      dueDate: todo.dueDate,
       createAt: todo.createAt,
       updateAt: todo.updateAt,
     );
