@@ -16,6 +16,10 @@ class TodoDao extends DatabaseAccessor<AppDatabase> with _$TodoDaoMixin {
     return select(todo).watch();
   }
 
+  Stream<TodoData> watchTodoById(int id) {
+    return (select(todo)..where((t) => t.id.equals(id))).watchSingle();
+  }
+
   Future<TodoData> getTodoById(int id) async {
     return (select(todo)..where((todo) => todo.id.equals(id))).getSingle();
   }

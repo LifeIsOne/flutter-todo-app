@@ -18,7 +18,7 @@ final todoListProvider = StreamProvider((ref) {
   return dao.watchTodos();
 });
 // deatil
-final todoDetailProvider = FutureProvider.family((ref, int id) {
+final todoDetailProvider = StreamProvider.family((ref, int id) {
   final dao = ref.watch(todoDaoProvider);
-  return dao.getTodoById(id);
+  return dao.watchTodoById(id);
 });
