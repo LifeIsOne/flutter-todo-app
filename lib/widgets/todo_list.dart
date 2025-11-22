@@ -39,12 +39,8 @@ class TodoList extends StatelessWidget {
               width: 50,
               child: Row(
                 children: [
-                  InkWell(
-                    child: const Icon(Icons.edit),
-                    onTap: () {
-                      // TODO: Implement edit functionality
-                    },
-                  ),
+                  InkWell(child: const Icon(Icons.edit), onTap: () {}),
+
                   InkWell(
                     child: const Icon(Icons.delete),
                     onTap: () => onTodoDeleted(todo),

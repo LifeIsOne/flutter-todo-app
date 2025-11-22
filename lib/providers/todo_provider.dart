@@ -23,6 +23,15 @@ class TodoNotifier extends StateNotifier<List<Todo>> {
   void remove(int id) {
     state = state.where((todo) => todo.id != id).toList();
   }
+
+  void update(Todo updateTodo) {
+    state = state.map((todo) {
+      if (todo.id == updateTodo.id) {
+        return updateTodo;
+      }
+      return todo;
+    }).toList();
+  }
 }
 
 final todoProvider = StateNotifierProvider<TodoNotifier, List<Todo>>((ref) {
