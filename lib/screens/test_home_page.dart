@@ -17,59 +17,94 @@ class TestHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TodoDetailScreen(),
-                  ),
-                );
-              },
-              child: const Text("Detail 화면 이동"),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TodoDetailScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text("Detail 화면 이동"),
+                ),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TodoCreateScreen(),
-                  ),
-                );
-              },
-              child: const Text("등록 화면 이동"),
+            SizedBox(height: 5),
+
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TodoCreateScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text("등록 화면 이동"),
+                ),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TestScreen()),
-                );
-              },
-              child: const Text("테스트 화면"),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TestScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text("테스트 화면"),
+                ),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TodoListScreen(),
-                  ),
-                );
-              },
-              child: const Text("목록 화면 이동"),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TodoListScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text("목록 화면 이동"),
+                ),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const UserRegScreen(),
-                  ),
-                );
-              },
-              child: const Text("사용자 등록 화면 이동"),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UserRegScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text("사용자 등록 화면 이동"),
+                ),
+              ),
             ),
           ],
         ),
