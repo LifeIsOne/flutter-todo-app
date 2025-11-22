@@ -20,7 +20,7 @@ class TodoList extends StatelessWidget {
           return ListTile(
             leading: todo.todoImg == null
                 ? Image.asset(
-                    'assets/images/todo/files.png',
+                    'assets/images/todo/default.png',
                     width: 40,
                     height: 40,
                   )
@@ -31,7 +31,7 @@ class TodoList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const TodoDetailScreen(),
+                  builder: (context) => TodoDetailScreen(todoId: todo.id!),
                 ),
               );
             },

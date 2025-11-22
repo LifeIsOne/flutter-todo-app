@@ -3,6 +3,7 @@ class Todo {
   final String title;
   final String? todoImg;
   final List<String> tags;
+  final DateTime? dueDate;
   final DateTime? createAt;
   final DateTime? updateAt;
 
@@ -11,9 +12,14 @@ class Todo {
     required this.title,
     this.todoImg,
     this.tags = const [],
+    this.dueDate,
     this.createAt,
     this.updateAt,
   });
+
+  String get defaultImg {
+    return todoImg ?? 'assets/images/todo/default.png';
+  }
 
   factory Todo.fromMap(Map<String, dynamic> map) {
     return Todo(
@@ -21,6 +27,7 @@ class Todo {
       title: map['title'],
       todoImg: map['todoImg'],
       tags: List<String>.from(map['tags'] ?? []),
+      dueDate: map['dueDate'],
       createAt: map['createAt'],
       updateAt: map['updateAt'],
     );
@@ -32,6 +39,7 @@ class Todo {
       'title': title,
       'todoImg': todoImg,
       'tags': tags,
+      'dueDate': dueDate,
       'createAt': createAt,
       'updateAt': updateAt,
     };

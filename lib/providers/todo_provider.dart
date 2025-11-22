@@ -8,7 +8,15 @@ class TodoNotifier extends StateNotifier<List<Todo>> {
   TodoNotifier(this.todoRepository) : super(todoRepository.getTodos());
 
   void add(Todo todo) {
-    state = [...state, todo];
+    final newTodo = Todo(
+      id: state.isEmpty ? 1 : (state.last.id ?? 0) + 1,
+      title: todo.title,
+      todoImg: todo.todoImg,
+      tags: todo.tags,
+      createAt: todo.createAt,
+      updateAt: todo.updateAt,
+    );
+    state = [...state, newTodo];
   }
 
   void remove(int id) {

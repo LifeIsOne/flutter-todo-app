@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/screens/test_screen.dart';
 import 'package:todo_app/screens/todo_create_screen.dart';
-import 'package:todo_app/screens/todo_detail_screen.dart';
 import 'package:todo_app/screens/todo_list_screen.dart';
 import 'package:todo_app/screens/user_reg_screen.dart';
 import 'package:todo_app/widgets/app_bottom_nav.dart';
@@ -19,23 +18,23 @@ class TestHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TodoDetailScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text("Detail 화면 이동"),
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: ElevatedButton(
+            //       onPressed: () {
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => const TodoDetailScreen(),
+            //           ),
+            //         );
+            //       },
+            //       child: const Text("Detail 화면 이동"),
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: 5),
 
             SizedBox(

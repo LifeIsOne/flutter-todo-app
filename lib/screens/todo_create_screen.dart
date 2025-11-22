@@ -40,6 +40,12 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     }
   }
 
+  void deleteDueDate() {
+    setState(() {
+      dueDate = null;
+    });
+  }
+
   // Function 이미지 등록
   Future<void> pickFromGallery() async {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
@@ -77,11 +83,11 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Add Todo')),
       body: Column(
-        children: <Widget>[
+        children: [
           imgFile == null
               ? AspectRatio(
                   aspectRatio: 3 / 2,
-                  child: Image.asset('assets/images/todo/files.png'),
+                  child: Image.asset('assets/images/todo/default.png'),
                 )
               : AspectRatio(
                   aspectRatio: 3 / 2,
@@ -120,7 +126,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
 
           // 태그
           Padding(
-            padding: const EdgeInsets.all(30),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -128,47 +134,79 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                   '태그 선택',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                 ),
-                Wrap(
-                  spacing: 4,
-                  children: tagOptions.map((tag) {
-                    final isSelected = selectedTags.contains(tag);
-                    return ChoiceChip(
-                      showCheckmark: false,
-                      selectedColor: lightColorScheme.tertiary,
-                      label: Text(tag),
-                      selected: isSelected,
-                      onSelected: (selected) {
-                        setState(() {
-                          if (selected) {
-                            selectedTags.add(tag);
-                          } else {
-                            selectedTags.remove(tag);
-                          }
-                        });
-                      },
-                    );
-                  }).toList(),
+                SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    spacing: 4,
+                    children: tagOptions.map((tag) {
+                      final isSelected = selectedTags.contains(tag);
+                      return ChoiceChip(
+                        showCheckmark: false,
+                        selectedColor: Colors.blue,
+                        label: Text(
+                          tag,
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          setState(() {
+                            if (selected) {
+                              selectedTags.add(tag);
+                            } else {
+                              selectedTags.remove(tag);
+                            }
+                          });
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(20),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  dueDate == null
-                      ? '마감일 선택 안됨'
-                      : '마감일: ${dueDate!.year}-${dueDate!.month}-${dueDate!.day}',
+                  '마감일 선택',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                ElevatedButton(onPressed: pickDueDate, child: Text('날짜 선택')),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      dueDate == null
+                          ? '선택 안됨'
+                          : '마감일: ${dueDate!.year}-${dueDate!.month}-${dueDate!.day}',
+                    ),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: pickDueDate,
+                          child: Text('날짜 선택'),
+                        ),
+                        SizedBox(width: 4),
+                        ElevatedButton(
+                          onPressed: deleteDueDate,
+                          child: Text('취소'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                lightColorScheme.error, // ← 삭제 버튼 색
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
 
-          Spacer(),
-          // 추가하기 버튼
           SizedBox(
             width: double.infinity,
             child: Padding(
@@ -180,8 +218,8 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: lightColorScheme.tertiary,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 14,
+                    horizontal: 12,
+                    vertical: 4,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -194,7 +232,6 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
               ),
             ),
           ),
-          SizedBox(height: 24),
         ],
       ),
     );

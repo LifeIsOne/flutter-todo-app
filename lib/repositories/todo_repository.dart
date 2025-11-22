@@ -18,7 +18,6 @@ class TodoRepository {
   // }
 
   void addTodo(Todo todo) {
-    // 타입 생략
     final newTodo = Todo(
       id: todos.length + 1,
       title: todo.title,

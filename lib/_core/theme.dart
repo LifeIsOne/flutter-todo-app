@@ -6,7 +6,7 @@ const lightColorScheme = ColorScheme(
   // 아이콘 색상
   primary: Color(0xFF5D86DB),
   onPrimary: Color(0xFFFFFFFF),
-  secondary: Color(0xFFF5C538),
+  secondary: Color(0xFF2E81F6),
   onSecondary: Color(0xFFFFFFFF),
   tertiary: Color(0xFFB0DB4B),
   onTertiary: Color(0xFFFFFFFF),
