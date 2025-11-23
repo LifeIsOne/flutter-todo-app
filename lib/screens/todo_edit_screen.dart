@@ -19,6 +19,8 @@ class TodoEditScreen extends ConsumerStatefulWidget {
 
 class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
   final ImagePicker picker = ImagePicker();
+  final titleController = TextEditingController();
+
   List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
 
   String title = '';
@@ -52,6 +54,10 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
 
     if (picked != null) {
       setState(() {
+        if (dueDate == null) {
+          dueDate = DateTime.now();
+          dueTime = picked;
+        }
         dueTime = picked;
       });
     }
@@ -115,7 +121,7 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
 
         data: (todos) {
           if (!isInitialized) {
-            title = todos.title;
+            titleController.text = todos.title;
             selectedTags = List.from(todos.tags ?? []);
             dueDate = todos.dueDate;
             imgFile = todos.todoImg != null ? File(todos.todoImg!) : null;
@@ -164,6 +170,7 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
                   TextField(
                     onChanged: (value) => title = value,
                     maxLines: 3,
+                    controller: titleController,
                     decoration: InputDecoration(
                       hintText: '할 일 입력하기',
                       border: OutlineInputBorder(),

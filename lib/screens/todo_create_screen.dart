@@ -45,11 +45,15 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   Future<void> pickDueTime() async {
     final picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: dueTime ?? TimeOfDay.now(),
     );
 
     if (picked != null) {
       setState(() {
+        if (dueDate == null) {
+          dueDate = DateTime.now();
+          dueTime = picked;
+        }
         dueTime = picked;
       });
     }
@@ -106,7 +110,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   @override
   Widget build(BuildContext context) {
     final dueText = dueDate == null
-        ? '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}'
+        ? '마감일 선택'
         : '${dueDate!.year}-${dueDate!.month.toString().padLeft(2, '0')}-${dueDate!.day.toString().padLeft(2, '0')}'
               '${dueTime == null ? '' : ' ${dueTime!.hour.toString().padLeft(2, '0')}:${dueTime!.minute.toString().padLeft(2, '0')}'}';
 

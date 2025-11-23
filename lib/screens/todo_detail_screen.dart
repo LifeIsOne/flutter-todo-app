@@ -126,7 +126,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
                         Text(
                           todo.dueDate == null
                               ? '마감일 없음'
-                              : '${todo.dueDate!.year}-${todo.dueDate!.month}-${todo.dueDate!.day}',
+                              : '${todo.dueDate!.year}-${todo.dueDate!.month.toString().padLeft(2, '0')}-${todo.dueDate!.day.toString().padLeft(2, '0')} ${todo.dueDate!.hour.toString().padLeft(2, '0')}:${todo.dueDate!.minute.toString().padLeft(2, '0')}',
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
