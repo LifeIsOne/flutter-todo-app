@@ -13,7 +13,7 @@ class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.only(top: 20),
       itemCount: todos.length,
       itemBuilder: (context, index) {
         final todo = todos[index];
@@ -59,46 +59,49 @@ class TodoList extends StatelessWidget {
                 onTap: () => onTodoDeleted(todo),
               ),
             ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Wrap(
-                  spacing: 4,
-                  children: (todo.tags?.isEmpty ?? true)
-                      ? [Text('태그 없음', style: TextStyle(color: Colors.grey))]
-                      : todo.tags!.map((tag) {
-                          return Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade50,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              tag,
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
+            subtitle: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 4,
+                    children: (todo.tags?.isEmpty ?? true)
+                        ? [Text('태그 없음', style: TextStyle(color: Colors.grey))]
+                        : todo.tags!.map((tag) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
                               ),
-                            ),
-                          );
-                        }).toList(),
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.event, size: 14, color: Colors.grey),
-                    Text(
-                      todo.dueDate == null
-                          ? '마감일 없음'
-                          : '${todo.dueDate!.year}-${todo.dueDate!.month}-${todo.dueDate!.day}',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-                    ),
-                  ],
-                ),
-              ],
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade50,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                tag,
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.event, size: 14, color: Colors.grey),
+                      Text(
+                        todo.dueDate == null
+                            ? '마감일 없음'
+                            : '${todo.dueDate!.year}-${todo.dueDate!.month}-${todo.dueDate!.day}',
+                        style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

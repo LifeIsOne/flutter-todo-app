@@ -16,34 +16,31 @@ class SelectTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return
     // color: Colors.red,
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Tag',
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: tagOptions.map((tag) {
-                  final isSelected = selectedTag == tag;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: _buildTagButton(tag, isSelected),
-                  );
-                }).toList(),
-              ),
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Tag',
+          textAlign: TextAlign.left,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: tagOptions.map((tag) {
+                final isSelected = selectedTag == tag;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: _buildTagButton(tag, isSelected),
+                );
+              }).toList(),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
