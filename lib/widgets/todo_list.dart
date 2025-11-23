@@ -54,15 +54,51 @@ class TodoList extends StatelessWidget {
             },
             trailing: SizedBox(
               width: 25,
-              child: Row(
-                children: [
-                  // InkWell(child: const Icon(Icons.edit), onTap: () {}),
-                  InkWell(
-                    child: const Icon(Icons.delete),
-                    onTap: () => onTodoDeleted(todo),
-                  ),
-                ],
+              child: InkWell(
+                child: const Icon(Icons.delete, color: Color(0xFFFF4B6E)),
+                onTap: () => onTodoDeleted(todo),
               ),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Wrap(
+                  spacing: 4,
+                  children: (todo.tags?.isEmpty ?? true)
+                      ? [Text('태그 없음', style: TextStyle(color: Colors.grey))]
+                      : todo.tags!.map((tag) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.shade50,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              tag,
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.event, size: 14, color: Colors.grey),
+                    Text(
+                      todo.dueDate == null
+                          ? '마감일 없음'
+                          : '${todo.dueDate!.year}-${todo.dueDate!.month}-${todo.dueDate!.day}',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );

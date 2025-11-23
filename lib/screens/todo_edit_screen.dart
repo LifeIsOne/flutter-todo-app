@@ -23,7 +23,6 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
 
   List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
 
-  String title = '';
   File? imgFile;
   List<String> selectedTags = [];
   DateTime? dueDate;
@@ -95,7 +94,7 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
 
     final updateTodo = TodoCompanion(
       id: Value(widget.todoId),
-      title: Value(title),
+      title: Value(titleController.text),
       todoImg: Value(imgFile?.path),
       tags: Value(selectedTags),
       dueDate: Value(finalDueDate),
@@ -168,7 +167,6 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
                   SizedBox(height: 20),
                   // 텍스트 필드
                   TextField(
-                    onChanged: (value) => title = value,
                     maxLines: 3,
                     controller: titleController,
                     decoration: InputDecoration(
@@ -282,13 +280,16 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
                     child: ElevatedButton.icon(
                       onPressed: onSubmit,
                       icon: const Icon(Icons.edit),
-                      label: const Text('수정하기'),
+                      label: const Text(
+                        '수정하기',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: lightColorScheme.tertiary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/providers/db_provider.dart';
 import 'package:todo_app/screens/todo_edit_screen.dart';
 
@@ -148,6 +149,17 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
                     label: const Text(
                       '수정하기',
                       style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: lightColorScheme.tertiary,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      textStyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
