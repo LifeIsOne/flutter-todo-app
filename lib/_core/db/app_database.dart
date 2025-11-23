@@ -3,11 +3,15 @@ import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:todo_app/_core/db/daos/todo_dao.dart';
+import 'package:todo_app/_core/db/tables/tag_tables.dart';
 import 'package:todo_app/_core/db/tables/todo_tables.dart';
+import 'package:todo_app/_core/db/tables/todo_tag_tables.dart';
+
+import 'daos/tag_dao.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Todo], daos: [TodoDao])
+@DriftDatabase(tables: [Todo, Tags, TodoTags], daos: [TodoDao, TagDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -18,42 +22,48 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     beforeOpen: (details) async {
       if (details.wasCreated) {
-        // 데이터베이스가 생성될 때 더미 데이터 삽입
-        await into(todo).insert(
+        final devId = await into(tags).insert(TagsCompanion.insert(name: '개발'));
+        final workoutId = await into(
+          tags,
+        ).insert(TagsCompanion.insert(name: '운동'));
+        final importantId = await into(
+          tags,
+        ).insert(TagsCompanion.insert(name: '중요'));
+
+        final todo1Id = await into(todo).insert(
           TodoCompanion.insert(
             title: '추상화 인터페이스 공부',
-            tags: Value(['공부', '중요']),
             createAt: Value(DateTime.now()),
             updateAt: Value(DateTime.now()),
           ),
         );
 
-        await into(todo).insert(
+        final todo2Id = await into(todo).insert(
           TodoCompanion.insert(
             title: '뜀 걸음 40분 이상',
-            tags: Value(['운동']),
             createAt: Value(DateTime.now()),
             updateAt: Value(DateTime.now()),
           ),
         );
 
-        await into(todo).insert(
+        final todo3Id = await into(todo).insert(
           TodoCompanion.insert(
             title: '저녁거리 사기',
-            tags: Value(['장보기,중요']),
             createAt: Value(DateTime.now()),
             updateAt: Value(DateTime.now()),
           ),
         );
 
-        await into(todo).insert(
-          TodoCompanion.insert(
-            title: 'Drift, Hive 적용',
-            tags: Value(['개발']),
-            createAt: Value(DateTime.now()),
-            updateAt: Value(DateTime.now()),
-          ),
-        );
+        await into(
+          todoTags,
+        ).insert(TodoTagsCompanion.insert(todoId: todo1Id, tagId: devId));
+        await into(
+          todoTags,
+        ).insert(TodoTagsCompanion.insert(todoId: todo1Id, tagId: importantId));
+
+        await into(
+          todoTags,
+        ).insert(TodoTagsCompanion.insert(todoId: todo2Id, tagId: workoutId));
       }
     },
   );
