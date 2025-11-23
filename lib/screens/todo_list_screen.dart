@@ -19,6 +19,7 @@ class TodoListScreen extends ConsumerStatefulWidget {
 class _TodoListScreenState extends ConsumerState<TodoListScreen> {
   List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
   String? selectedTag;
+  String searchTerm = ''; // 빈 문자열로 초기화하여 null-safety 확보
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +29,15 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
       loading: () => Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, stackTrace) => Scaffold(body: Center(child: Text('Ops'))),
       data: (todos) {
-        final filteredTodos = selectedTag == null
-            ? todos
-            : todos.where((todo) => todo.tags!.contains(selectedTag)).toList();
+        final filteredTodos = todos.where((todo) {
+          final tagMatch = selectedTag == null ||
+              (todo.tags?.contains(selectedTag) ?? false);
+          // searchTerm이 비어있으면 모든 항목을 포함하고, 그렇지 않으면 제목에 검색어가 포함된 항목만 필터링
+          final searchMatch = searchTerm.isEmpty ||
+              todo.title.toLowerCase().contains(searchTerm.toLowerCase());
+          return tagMatch && searchMatch;
+        }).toList();
+
 
         return Scaffold(
           backgroundColor: const Color(0xFFF7F7F7),
@@ -39,7 +46,13 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
               const SizedBox(height: 80),
               const Header(), // title, 사용자 이름, 프로필 이미지
               // 검색 바
-              const TodoSearchBar(),
+              TodoSearchBar( // const 키워드 제거
+                onChanged: (query) { // searchTerm 대신 onChanged 사용
+                  setState(() {
+                    searchTerm = query; // 오타 수정
+                  });
+                },
+              ),
               // 태그
               SelectTag(
                 tagOptions: tagOptions,

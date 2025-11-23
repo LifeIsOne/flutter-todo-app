@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_app/screens/test_home_page.dart';
+import 'package:todo_app/screens/todo_list_screen.dart';
 
 import '_core/theme.dart';
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       // TODO : 테마 세부 컬러 수정
       theme: lightMode,
       // theme: darkMode,
-      home: TestHomePage(),
+      home: TodoListScreen(),
     );
   }
 }
