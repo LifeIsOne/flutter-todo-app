@@ -20,17 +20,19 @@
 3. 의존성 설치
   ```
   flutter pub get
-  ```
-  혹은 AndroidSutdio 의 `pubsepcyaml`파일에서 'Pub get'
+  ```  
+  
+  AndroidSutdio IDE의 `pubsepcyaml`파일에서 'Pub get'
 
 
-4, Drift 코드 생성
+
+  4, Drift 코드 생성
   ```
   dart run build_runner build
   ```
 
 
 5. 앱 실행
-   ```
-   flutter run
-   ```
+```
+flutter run
+```
