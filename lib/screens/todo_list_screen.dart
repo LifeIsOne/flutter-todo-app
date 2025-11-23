@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/providers/db_provider.dart';
+import 'package:todo_app/providers/tag_provider.dart';
 import 'package:todo_app/screens/todo_create_screen.dart';
 import 'package:todo_app/widgets/header.dart';
 import 'package:todo_app/widgets/todo_search_bar.dart';
@@ -17,13 +18,17 @@ class TodoListScreen extends ConsumerStatefulWidget {
 }
 
 class _TodoListScreenState extends ConsumerState<TodoListScreen> {
-  List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
-  String? selectedTag;
-  String searchTerm = ''; // 빈 문자열로 초기화하여 null-safety 확보
+  // List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
 
   @override
   Widget build(BuildContext context) {
     final todosAsync = ref.watch(todoListProvider);
+    final tagAsync = ref.watch(tagListProvider);
+  
+    final tagOptions = tagAsync.value?.map((tag) => tag.name).toList() ?? [];
+
+    String? selectedTag;
+    String searchTerm = '';
 
     return todosAsync.when(
       loading: () => Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -33,7 +38,6 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
           final tagMatch =
               selectedTag == null ||
               (todo.tags?.contains(selectedTag) ?? false);
-          // searchTerm이 비어있으면 모든 항목을 포함하고, 그렇지 않으면 제목에 검색어가 포함된 항목만 필터링
           final searchMatch =
               searchTerm.isEmpty ||
               todo.title.toLowerCase().contains(searchTerm.toLowerCase());
@@ -50,9 +54,7 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                 const Header(), // title, 사용자 이름, 프로필 이미지
                 // 검색 바
                 TodoSearchBar(
-                  // const 키워드 제거
                   onChanged: (query) {
-                    // searchTerm 대신 onChanged 사용
                     setState(() {
                       searchTerm = query; // 오타 수정
                     });
