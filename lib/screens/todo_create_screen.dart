@@ -32,12 +32,49 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   void initState() {
     super.initState();
 
-    SharedPreferences.getInstance().then((prefs) {
-      titleController.text = prefs.getString('temp_todo') ?? '';
-    });
+    checkTempTodo();
   }
 
-  // 취소하기 -> 저장
+  Future<void> checkTempTodo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tempTodo = prefs.getString('temp_todo');
+
+    if (tempTodo != null) {
+      WidgetsBinding.instance.addPostFrameCallback((t) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text(
+                '임시 저장된 항목이 있습니다.',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              content: Text('"$tempTodo"'),
+              actions: [
+                TextButton(
+                  child: const Text('삭제하기'),
+                  onPressed: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.remove('temp_todo');
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('불러오기'),
+                  onPressed: () {
+                    titleController.text = tempTodo;
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      });
+    }
+  }
+
+  // 취소하기 -> 저장(임시)
   Future<void> onCancel() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('temp_todo', titleController.text);
@@ -169,7 +206,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
               Padding(
                 padding: const EdgeInsetsGeometry.symmetric(vertical: 10),
                 child: TextField(
-                  onChanged: (value) => titleController.text = value,
+                  controller: titleController,
                   maxLines: 3,
                   decoration: const InputDecoration(
                     hintText: '할 일 입력하기',
