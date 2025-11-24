@@ -1,16 +1,38 @@
-# todo_app
+# Flutter todo_app
 
-A new Flutter project.
+## 기술 스택
+- Fluuter
+- Riverpod
+- Drift(SQLite DB)
+- 개발 환경 :  iOS Simulator
 
-## Getting Started
+## 실행가이드 🚀
+1. 저장소 복사
+  ```
+  https://github.com/LifeIsOne/flutter-todo-app
+  ```
+2. 저장소 이동
+  ```
+  cd todo_app
+  ```
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+3. 의존성 설치
+  ```
+  flutter pub get
+  ```  
+  
+  AndroidSutdio IDE의 `pubsepcyaml`파일에서 'Pub get'
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+  4, Drift 코드 생성
+  ```
+  dart run build_runner build
+  ```
+
+
+5. 앱 실행
+```
+flutter run
+```
