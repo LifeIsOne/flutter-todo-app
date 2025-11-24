@@ -19,7 +19,6 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final todoAsync = ref.watch(todoDetailProvider(widget.todoId));
-    // final todo = todos.firstWhere((todo) => todo.id == widget.todoId);
 
     return todoAsync.when(
       loading: () => Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -35,9 +34,11 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
               children: [
                 AspectRatio(
                   aspectRatio: 3 / 2,
-                  child: todo.todoImg != null
-                      ? Image.file(File(todo.todoImg!))
-                      : Image.asset('assets/images/todo/default.png'),
+                  child: todo.todoImg == null
+                      ? Image.asset('assets/images/todo/default.png')
+                      : todo.todoImg!.startsWith('assets/')
+                      ? Image.asset(todo.todoImg!)
+                      : Image.file(File(todo.todoImg!)),
                 ),
 
                 const SizedBox(height: 20),

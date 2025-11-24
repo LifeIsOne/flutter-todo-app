@@ -22,7 +22,7 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
   final ImagePicker picker = ImagePicker();
   final titleController = TextEditingController();
 
-  File? imgFile;
+  String? imgFile;
   List<String> selectedTags = [];
   DateTime? dueDate;
   TimeOfDay? dueTime;
@@ -73,7 +73,7 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
       setState(() {
-        imgFile = File(picked.path);
+        imgFile = picked.path;
       });
     }
   }
@@ -94,7 +94,7 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
     final updateTodo = TodosCompanion(
       id: Value(widget.todoId),
       title: Value(titleController.text),
-      todoImg: Value(imgFile?.path),
+      todoImg: Value(imgFile),
       tags: Value(selectedTags),
       dueDate: Value(finalDueDate),
       updateAt: Value(DateTime.now()),
@@ -127,7 +127,7 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
             titleController.text = todos.title;
             selectedTags = List.from(todos.tags ?? []);
             dueDate = todos.dueDate;
-            imgFile = todos.todoImg != null ? File(todos.todoImg!) : null;
+            imgFile = todos.todoImg != null ? todos.todoImg! : null;
             isInitialized = true;
           }
 
@@ -146,7 +146,9 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
                     aspectRatio: 3 / 2,
                     child: imgFile == null
                         ? Image.asset('assets/images/todo/default.png')
-                        : Image.file(imgFile!),
+                        : imgFile!.startsWith('assets/')
+                        ? Image.asset(imgFile!)
+                        : Image.file(File(imgFile!)),
                   ),
 
                   const SizedBox(height: 20),

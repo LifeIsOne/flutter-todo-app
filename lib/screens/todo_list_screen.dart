@@ -6,10 +6,9 @@ import 'package:todo_app/providers/tag_provider.dart';
 import 'package:todo_app/providers/todo_provider.dart';
 import 'package:todo_app/screens/todo_create_screen.dart';
 import 'package:todo_app/widgets/header.dart';
+import 'package:todo_app/widgets/select_tag.dart';
+import 'package:todo_app/widgets/todo_list.dart';
 import 'package:todo_app/widgets/todo_search_bar.dart';
-
-import '../widgets/select_tag.dart';
-import '../widgets/todo_list.dart';
 
 class TodoListScreen extends ConsumerWidget {
   const TodoListScreen({super.key});

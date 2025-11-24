@@ -1,21 +1,25 @@
 import 'dart:io';
 
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/_core/theme.dart';
+import 'package:todo_app/providers/db_provider.dart';
+import 'package:todo_app/providers/user_provider.dart';
 
-class UserRegScreen extends StatefulWidget {
+class UserRegScreen extends ConsumerStatefulWidget {
   const UserRegScreen({super.key});
 
   @override
-  State<UserRegScreen> createState() => _UserRegScreenState();
+  ConsumerState<UserRegScreen> createState() => _UserRegScreenState();
 }
 
-class _UserRegScreenState extends State<UserRegScreen> {
+class _UserRegScreenState extends ConsumerState<UserRegScreen> {
   final ImagePicker picker = ImagePicker();
+  final nameController = TextEditingController();
 
   File? profileImg;
   String username = '';
@@ -30,6 +34,8 @@ class _UserRegScreenState extends State<UserRegScreen> {
   }
 
   Future<void> onSubmit() async {
+    final username = nameController.text.trim();
+
     if (username.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -42,29 +48,11 @@ class _UserRegScreenState extends State<UserRegScreen> {
       );
       return;
     }
+    await ref
+        .read(userControllerProvider)
+        .updateUser(name: username, profileImg: profileImg?.path);
 
-    String? savedprofileImg;
-    if (profileImg != null) {
-      try {
-        final appDir = await getApplicationDocumentsDirectory();
-        final fileName = path.basename(profileImg!.path);
-        final savedFile = File(path.join(appDir.path, 'profile_$fileName'));
-
-        await profileImg!.copy(savedFile.path);
-        savedprofileImg = savedFile.path;
-      } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('이미지 저장 중 오류가 발생했습니다: $e')));
-        return;
-      }
-    }
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_name', username.trim());
-    if (savedprofileImg != null) {
-      await prefs.setString('user_profile_image_path', savedprofileImg);
-    }
+    ref.invalidate(userProvider);
 
     Navigator.pop(context);
   }
@@ -95,6 +83,7 @@ class _UserRegScreenState extends State<UserRegScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: TextField(
+              controller: nameController,
               decoration: const InputDecoration(
                 labelText: "이름 입력",
                 border: OutlineInputBorder(),

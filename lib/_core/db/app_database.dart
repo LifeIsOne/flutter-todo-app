@@ -27,6 +27,13 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     beforeOpen: (details) async {
       if (details.wasCreated) {
+        final user = await into(users).insert(
+          UsersCompanion.insert(
+            name: '공부',
+            profileImg: Value('assets/images/user/avatar01.png'),
+          ),
+        );
+
         final tag1Id = await into(
           tags,
         ).insert(TagsCompanion.insert(name: '공부'));

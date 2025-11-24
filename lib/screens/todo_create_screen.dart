@@ -4,10 +4,13 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/providers/db_provider.dart';
+import 'package:todo_app/providers/tag_provider.dart';
 
 class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
@@ -18,13 +21,11 @@ class TodoCreateScreen extends ConsumerStatefulWidget {
 
 class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   final ImagePicker picker = ImagePicker();
-  File? imgFile;
+  String? imgFile;
   final titleController = TextEditingController();
 
-  List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
   List<String> selectedTags = [];
 
-  // Date + Time Picker
   DateTime? dueDate;
   TimeOfDay? dueTime;
 
@@ -125,14 +126,29 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     });
   }
 
-  // Function 이미지 등록
+  // 이미지 로컬에 저장
+  Future<String> saveImgToLocal(String oldPath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final imgName = p.basename(oldPath);
+    final newPath = '${directory}/$imgName';
+
+    await File(oldPath).copy(newPath);
+    return newPath;
+  }
+
+  // 갤러리에서 사진 선택
   Future<void> pickFromGallery() async {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        imgFile = File(picked.path);
-      });
+
+    if (picked == null) {
+      return;
     }
+
+    final finalPath = await saveImgToLocal(picked.path);
+
+    setState(() {
+      imgFile = finalPath; // String 경로
+    });
   }
 
   Future<void> onSubmit() async {
@@ -164,7 +180,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
 
     final newTodo = TodosCompanion(
       title: Value(titleController.text),
-      todoImg: Value(imgFile?.path),
+      todoImg: Value(imgFile),
       tags: Value(selectedTags),
       dueDate: Value(sumDue),
       createAt: Value(DateTime.now()),
@@ -185,6 +201,8 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
         ? '마감일 선택'
         : '${dueDate!.year}-${dueDate!.month.toString().padLeft(2, '0')}-${dueDate!.day.toString().padLeft(2, '0')}'
               '${dueTime == null ? '' : ' ${dueTime!.hour.toString().padLeft(2, '0')}:${dueTime!.minute.toString().padLeft(2, '0')}'}';
+    final tagAsync = ref.watch(tagListProvider);
+    final tagOptions = tagAsync.value?.map((tag) => tag.name).toList() ?? [];
 
     return Scaffold(
       appBar: AppBar(title: Text('할 일 추가하기')),
@@ -201,7 +219,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                     )
                   : AspectRatio(
                       aspectRatio: 3 / 2,
-                      child: Image.file(imgFile!, fit: BoxFit.cover),
+                      child: Image.file(File(imgFile!), fit: BoxFit.cover),
                     ),
               const SizedBox(height: 10),
 
@@ -224,7 +242,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
 
               // 텍스트 필드
               Padding(
-                padding: const EdgeInsetsGeometry.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: TextField(
                   controller: titleController,
                   maxLines: 3,
