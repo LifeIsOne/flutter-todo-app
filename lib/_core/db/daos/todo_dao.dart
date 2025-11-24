@@ -9,11 +9,19 @@ class TodoDao extends DatabaseAccessor<AppDatabase> with _$TodoDaoMixin {
   TodoDao(AppDatabase appDb) : super(appDb);
 
   Future<List<Todo>> getAllTodos() {
-    return select(todos).get();
+    return (select(todos)..orderBy([
+          (todo) =>
+              OrderingTerm(expression: todo.dueDate, mode: OrderingMode.asc),
+        ]))
+        .get();
   }
 
   Stream<List<Todo>> watchTodos() {
-    return select(todos).watch();
+    return (select(todos)..orderBy([
+          (todo) =>
+              OrderingTerm(expression: todo.dueDate, mode: OrderingMode.asc),
+        ]))
+        .watch();
   }
 
   Stream<Todo> watchTodoById(int id) {
