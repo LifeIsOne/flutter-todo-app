@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../screens/user_reg_screen.dart';
+import 'package:todo_app/screens/user_reg_screen.dart';
 
 class Header extends StatelessWidget {
   const Header({super.key});
