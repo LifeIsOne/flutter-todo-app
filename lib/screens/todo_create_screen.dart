@@ -77,7 +77,12 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   // 취소하기 -> 저장(임시)
   Future<void> onCancel() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('temp_todo', titleController.text);
+    final finalTitle = titleController.text.trim();
+
+    if (finalTitle.isNotEmpty) {
+      await prefs.setString('temp_todo', titleController.text);
+    }
+
     Navigator.of(context).pop();
   }
 
@@ -131,6 +136,21 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   }
 
   Future<void> onSubmit() async {
+    // 프론트 단 검증
+    final finalTitle = titleController.text.trim();
+    if (finalTitle.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            '🤦‍♀️아무것도 입력하지 않으셨습니다!🤷‍♂️',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      );
+      return;
+    }
+
     DateTime? sumDue;
     if (dueDate != null) {
       sumDue = DateTime(
