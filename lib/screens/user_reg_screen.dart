@@ -1,11 +1,8 @@
 import 'dart:io';
 
-import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/providers/db_provider.dart';
 import 'package:todo_app/providers/user_provider.dart';
@@ -50,7 +47,10 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
     }
     await ref
         .read(userControllerProvider)
-        .updateUser(name: username, profileImg: profileImg?.path);
+        .updateUser(
+          name: username,
+          profileImg: profileImg?.path ?? 'assets/images/user/avatar00.png',
+        );
 
     ref.invalidate(userProvider);
 
