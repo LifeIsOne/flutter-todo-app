@@ -57,7 +57,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
                   ],
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 // 태그
                 Column(
@@ -71,7 +71,8 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
+
                     SizedBox(
                       width: double.infinity,
                       child: Wrap(
@@ -85,7 +86,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
                               ]
                             : todo.tags!.map((tag) {
                                 return Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 6,
                                   ),
@@ -106,7 +107,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 // 마감일
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,8 +123,10 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
 
                     Row(
                       children: [
-                        Icon(Icons.event, color: Colors.grey),
-                        SizedBox(width: 8),
+                        const Icon(Icons.event, color: Colors.grey),
+
+                        const SizedBox(width: 8),
+
                         Text(
                           todo.dueDate == null
                               ? '마감일 없음'
@@ -138,7 +141,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
             ),
           ),
           bottomNavigationBar: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

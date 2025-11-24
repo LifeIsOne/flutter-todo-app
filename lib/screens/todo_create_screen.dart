@@ -200,7 +200,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                               });
                             },
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(20),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           );
                         }).toList(),
@@ -258,7 +258,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               // 등록버튼
               SizedBox(
                 width: double.infinity,

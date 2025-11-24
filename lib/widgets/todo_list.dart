@@ -23,9 +23,9 @@ class TodoList extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Color(0x22000000), width: 1),
+            border: Border.all(color: const Color(0x22000000), width: 1),
             boxShadow: [
-              BoxShadow(
+              const BoxShadow(
                 color: Color(0x11000000),
                 offset: Offset(0, 5),
                 spreadRadius: 1,
@@ -70,7 +70,7 @@ class TodoList extends StatelessWidget {
                         ? [Text('태그 없음', style: TextStyle(color: Colors.grey))]
                         : todo.tags!.map((tag) {
                             return Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
                                 vertical: 4,
                               ),

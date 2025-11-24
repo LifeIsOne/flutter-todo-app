@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/providers/db_provider.dart';
+import 'package:todo_app/providers/tag_provider.dart';
 
 class TodoEditScreen extends ConsumerStatefulWidget {
   final int todoId;
@@ -20,8 +21,6 @@ class TodoEditScreen extends ConsumerStatefulWidget {
 class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
   final ImagePicker picker = ImagePicker();
   final titleController = TextEditingController();
-
-  List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
 
   File? imgFile;
   List<String> selectedTags = [];
@@ -109,9 +108,14 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
   @override
   Widget build(BuildContext context) {
     final todosAsync = ref.watch(todoDetailProvider(widget.todoId));
+    final tagAsync = ref.watch(tagListProvider);
+
+    final tagOptions = tagAsync.value?.map((tag) => tag.name).toList() ?? [];
 
     return Scaffold(
-      appBar: AppBar(title: Text('수정하기')),
+      appBar: AppBar(
+        title: Text('Edit Todo', style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
       body: todosAsync.when(
         loading: () =>
             Scaffold(body: Center(child: CircularProgressIndicator())),

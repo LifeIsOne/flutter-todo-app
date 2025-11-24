@@ -49,7 +49,9 @@ class _UserRegScreenState extends State<UserRegScreen> {
               backgroundImage: profileImg == null
                   ? null
                   : FileImage(profileImg!),
-              child: profileImg == null ? Icon(Icons.person, size: 90) : null,
+              child: profileImg == null
+                  ? const Icon(Icons.person, size: 90)
+                  : null,
             ),
           ),
 

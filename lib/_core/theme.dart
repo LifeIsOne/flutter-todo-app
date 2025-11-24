@@ -54,9 +54,7 @@ ThemeData lightMode = ThemeData(
         const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       ),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16), // Adjust as needed
-        ),
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     ),
   ),

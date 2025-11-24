@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/providers/db_provider.dart';
 import 'package:todo_app/providers/tag_provider.dart';
+import 'package:todo_app/providers/todo_provider.dart';
 import 'package:todo_app/screens/todo_create_screen.dart';
 import 'package:todo_app/widgets/header.dart';
 import 'package:todo_app/widgets/todo_search_bar.dart';
@@ -10,103 +11,72 @@ import 'package:todo_app/widgets/todo_search_bar.dart';
 import '../widgets/select_tag.dart';
 import '../widgets/todo_list.dart';
 
-class TodoListScreen extends ConsumerStatefulWidget {
+class TodoListScreen extends ConsumerWidget {
   const TodoListScreen({super.key});
 
   @override
-  ConsumerState<TodoListScreen> createState() => _TodoListScreenState();
-}
-
-class _TodoListScreenState extends ConsumerState<TodoListScreen> {
-  // List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
-
-  @override
-  Widget build(BuildContext context) {
-    final todosAsync = ref.watch(todoListProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filteredTodosAsync = ref.watch(filteredTodoListProvider);
     final tagAsync = ref.watch(tagListProvider);
-  
     final tagOptions = tagAsync.value?.map((tag) => tag.name).toList() ?? [];
+    final selectedTag = ref.watch(todoSelectedTagProvider);
 
-    String? selectedTag;
-    String searchTerm = '';
-
-    return todosAsync.when(
-      loading: () => Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (error, stackTrace) => Scaffold(body: Center(child: Text('Ops'))),
-      data: (todos) {
-        final filteredTodos = todos.where((todo) {
-          final tagMatch =
-              selectedTag == null ||
-              (todo.tags?.contains(selectedTag) ?? false);
-          final searchMatch =
-              searchTerm.isEmpty ||
-              todo.title.toLowerCase().contains(searchTerm.toLowerCase());
-          return tagMatch && searchMatch;
-        }).toList();
-
-        return Scaffold(
-          backgroundColor: const Color(0xFFF7F7F7),
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                const SizedBox(height: 80),
-                const Header(), // title, 사용자 이름, 프로필 이미지
-                // 검색 바
-                TodoSearchBar(
-                  onChanged: (query) {
-                    setState(() {
-                      searchTerm = query; // 오타 수정
-                    });
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F7F7),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            const SizedBox(height: 80),
+            const Header(), // title, 사용자 이름, 프로필 이미지
+            // 검색 바
+            TodoSearchBar(
+              onChanged: (query) {
+                ref.read(todoSearchTermProvider.notifier).state = query;
+              },
+            ),
+            // 태그
+            SelectTag(
+              tagOptions: tagOptions,
+              selectedTag: selectedTag,
+              onTagSelected: (tag) {
+                ref.read(todoSelectedTagProvider.notifier).update((state) {
+                  return state == tag ? null : tag;
+                });
+              },
+            ),
+            // 리스트 빌드 + 필터
+            Expanded(
+              child: filteredTodosAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stackTrace) =>
+                    const Center(child: Text('Error loading todos')),
+                data: (todos) => TodoList(
+                  todos: todos,
+                  onTodoDeleted: (todo) {
+                    _showDeleteDialog(context, ref, todo);
                   },
                 ),
-                // 태그
-                SelectTag(
-                  tagOptions: tagOptions,
-                  selectedTag: selectedTag,
-                  onTagSelected: (tag) {
-                    setState(() {
-                      if (selectedTag == tag) {
-                        selectedTag = null;
-                      } else {
-                        selectedTag = tag;
-                      }
-                    });
-                  },
-                ),
-                //  리스트 빌드
-                Expanded(
-                  child: TodoList(
-                    todos: filteredTodos,
-                    onTodoDeleted: (todo) {
-                      _showDeleteDialog(todo);
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          // 추가하기 버튼
-          floatingActionButton: FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TodoCreateScreen(),
-                ),
-              );
-            },
-            child: const Text('+'),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
+      // 추가하기 버튼
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TodoCreateScreen()),
+          );
+        },
+        child: const Text('+'),
+      ),
     );
   }
 
-  void _showDeleteDialog(TodoData todo) {
+  void _showDeleteDialog(BuildContext context, WidgetRef ref, TodoData todo) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
