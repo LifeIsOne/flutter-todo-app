@@ -130,7 +130,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   Future<String> saveImgToLocal(String oldPath) async {
     final directory = await getApplicationDocumentsDirectory();
     final imgName = p.basename(oldPath);
-    final newPath = '${directory}/$imgName';
+    final newPath = p.join(directory.path, imgName);
 
     await File(oldPath).copy(newPath);
     return newPath;
