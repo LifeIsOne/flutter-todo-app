@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 
-class Todo extends Table {
+class Todos extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   TextColumn get title => text()();

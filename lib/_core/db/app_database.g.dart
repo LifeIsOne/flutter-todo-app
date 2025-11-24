@@ -3,11 +3,11 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
-class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
+class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TodoTable(this.attachedDatabase, [this._alias]);
+  $TodosTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -49,7 +49,7 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<List<String>?>($TodoTable.$convertertagsn);
+      ).withConverter<List<String>?>($TodosTable.$convertertagsn);
   static const VerificationMeta _dueDateMeta = const VerificationMeta(
     'dueDate',
   );
@@ -99,10 +99,10 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'todo';
+  static const String $name = 'todos';
   @override
   VerificationContext validateIntegrity(
-    Insertable<TodoData> instance, {
+    Insertable<Todo> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -148,9 +148,9 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  TodoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Todo map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TodoData(
+    return Todo(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -163,7 +163,7 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
         DriftSqlType.string,
         data['${effectivePrefix}todo_img'],
       ),
-      tags: $TodoTable.$convertertagsn.fromSql(
+      tags: $TodosTable.$convertertagsn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}tags'],
@@ -185,8 +185,8 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   }
 
   @override
-  $TodoTable createAlias(String alias) {
-    return $TodoTable(attachedDatabase, alias);
+  $TodosTable createAlias(String alias) {
+    return $TodosTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<String>, String> $convertertags =
@@ -195,7 +195,7 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
       NullAwareTypeConverter.wrap($convertertags);
 }
 
-class TodoData extends DataClass implements Insertable<TodoData> {
+class Todo extends DataClass implements Insertable<Todo> {
   final int id;
   final String title;
   final String? todoImg;
@@ -203,7 +203,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   final DateTime? dueDate;
   final DateTime createAt;
   final DateTime updateAt;
-  const TodoData({
+  const Todo({
     required this.id,
     required this.title,
     this.todoImg,
@@ -221,7 +221,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
       map['todo_img'] = Variable<String>(todoImg);
     }
     if (!nullToAbsent || tags != null) {
-      map['tags'] = Variable<String>($TodoTable.$convertertagsn.toSql(tags));
+      map['tags'] = Variable<String>($TodosTable.$convertertagsn.toSql(tags));
     }
     if (!nullToAbsent || dueDate != null) {
       map['due_date'] = Variable<DateTime>(dueDate);
@@ -231,8 +231,8 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     return map;
   }
 
-  TodoCompanion toCompanion(bool nullToAbsent) {
-    return TodoCompanion(
+  TodosCompanion toCompanion(bool nullToAbsent) {
+    return TodosCompanion(
       id: Value(id),
       title: Value(title),
       todoImg: todoImg == null && nullToAbsent
@@ -247,12 +247,12 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     );
   }
 
-  factory TodoData.fromJson(
+  factory Todo.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TodoData(
+    return Todo(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       todoImg: serializer.fromJson<String?>(json['todoImg']),
@@ -276,7 +276,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     };
   }
 
-  TodoData copyWith({
+  Todo copyWith({
     int? id,
     String? title,
     Value<String?> todoImg = const Value.absent(),
@@ -284,7 +284,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     Value<DateTime?> dueDate = const Value.absent(),
     DateTime? createAt,
     DateTime? updateAt,
-  }) => TodoData(
+  }) => Todo(
     id: id ?? this.id,
     title: title ?? this.title,
     todoImg: todoImg.present ? todoImg.value : this.todoImg,
@@ -293,8 +293,8 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     createAt: createAt ?? this.createAt,
     updateAt: updateAt ?? this.updateAt,
   );
-  TodoData copyWithCompanion(TodoCompanion data) {
-    return TodoData(
+  Todo copyWithCompanion(TodosCompanion data) {
+    return Todo(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
       todoImg: data.todoImg.present ? data.todoImg.value : this.todoImg,
@@ -307,7 +307,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
 
   @override
   String toString() {
-    return (StringBuffer('TodoData(')
+    return (StringBuffer('Todo(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('todoImg: $todoImg, ')
@@ -325,7 +325,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TodoData &&
+      (other is Todo &&
           other.id == this.id &&
           other.title == this.title &&
           other.todoImg == this.todoImg &&
@@ -335,7 +335,7 @@ class TodoData extends DataClass implements Insertable<TodoData> {
           other.updateAt == this.updateAt);
 }
 
-class TodoCompanion extends UpdateCompanion<TodoData> {
+class TodosCompanion extends UpdateCompanion<Todo> {
   final Value<int> id;
   final Value<String> title;
   final Value<String?> todoImg;
@@ -343,7 +343,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
   final Value<DateTime?> dueDate;
   final Value<DateTime> createAt;
   final Value<DateTime> updateAt;
-  const TodoCompanion({
+  const TodosCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.todoImg = const Value.absent(),
@@ -352,7 +352,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     this.createAt = const Value.absent(),
     this.updateAt = const Value.absent(),
   });
-  TodoCompanion.insert({
+  TodosCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     this.todoImg = const Value.absent(),
@@ -361,7 +361,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     this.createAt = const Value.absent(),
     this.updateAt = const Value.absent(),
   }) : title = Value(title);
-  static Insertable<TodoData> custom({
+  static Insertable<Todo> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? todoImg,
@@ -381,7 +381,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     });
   }
 
-  TodoCompanion copyWith({
+  TodosCompanion copyWith({
     Value<int>? id,
     Value<String>? title,
     Value<String?>? todoImg,
@@ -390,7 +390,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     Value<DateTime>? createAt,
     Value<DateTime>? updateAt,
   }) {
-    return TodoCompanion(
+    return TodosCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       todoImg: todoImg ?? this.todoImg,
@@ -415,7 +415,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     }
     if (tags.present) {
       map['tags'] = Variable<String>(
-        $TodoTable.$convertertagsn.toSql(tags.value),
+        $TodosTable.$convertertagsn.toSql(tags.value),
       );
     }
     if (dueDate.present) {
@@ -432,7 +432,7 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
 
   @override
   String toString() {
-    return (StringBuffer('TodoCompanion(')
+    return (StringBuffer('TodosCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('todoImg: $todoImg, ')
@@ -651,7 +651,7 @@ class $TodoTagsTable extends TodoTags with TableInfo<$TodoTagsTable, TodoTag> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES todo (id)',
+      'REFERENCES todos (id)',
     ),
   );
   static const VerificationMeta _tagIdMeta = const VerificationMeta('tagId');
@@ -850,23 +850,378 @@ class TodoTagsCompanion extends UpdateCompanion<TodoTag> {
   }
 }
 
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _profileImgMeta = const VerificationMeta(
+    'profileImg',
+  );
+  @override
+  late final GeneratedColumn<String> profileImg = GeneratedColumn<String>(
+    'profile_img',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createAtMeta = const VerificationMeta(
+    'createAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createAt = GeneratedColumn<DateTime>(
+    'create_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now().toUtc(),
+  );
+  static const VerificationMeta _updateAtMeta = const VerificationMeta(
+    'updateAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updateAt = GeneratedColumn<DateTime>(
+    'update_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now().toUtc(),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    profileImg,
+    createAt,
+    updateAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<User> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('profile_img')) {
+      context.handle(
+        _profileImgMeta,
+        profileImg.isAcceptableOrUnknown(data['profile_img']!, _profileImgMeta),
+      );
+    }
+    if (data.containsKey('create_at')) {
+      context.handle(
+        _createAtMeta,
+        createAt.isAcceptableOrUnknown(data['create_at']!, _createAtMeta),
+      );
+    }
+    if (data.containsKey('update_at')) {
+      context.handle(
+        _updateAtMeta,
+        updateAt.isAcceptableOrUnknown(data['update_at']!, _updateAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return User(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      profileImg: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_img'],
+      ),
+      createAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}create_at'],
+      )!,
+      updateAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}update_at'],
+      )!,
+    );
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(attachedDatabase, alias);
+  }
+}
+
+class User extends DataClass implements Insertable<User> {
+  final int id;
+  final String name;
+  final String? profileImg;
+  final DateTime createAt;
+  final DateTime updateAt;
+  const User({
+    required this.id,
+    required this.name,
+    this.profileImg,
+    required this.createAt,
+    required this.updateAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || profileImg != null) {
+      map['profile_img'] = Variable<String>(profileImg);
+    }
+    map['create_at'] = Variable<DateTime>(createAt);
+    map['update_at'] = Variable<DateTime>(updateAt);
+    return map;
+  }
+
+  UsersCompanion toCompanion(bool nullToAbsent) {
+    return UsersCompanion(
+      id: Value(id),
+      name: Value(name),
+      profileImg: profileImg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(profileImg),
+      createAt: Value(createAt),
+      updateAt: Value(updateAt),
+    );
+  }
+
+  factory User.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return User(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      profileImg: serializer.fromJson<String?>(json['profileImg']),
+      createAt: serializer.fromJson<DateTime>(json['createAt']),
+      updateAt: serializer.fromJson<DateTime>(json['updateAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'profileImg': serializer.toJson<String?>(profileImg),
+      'createAt': serializer.toJson<DateTime>(createAt),
+      'updateAt': serializer.toJson<DateTime>(updateAt),
+    };
+  }
+
+  User copyWith({
+    int? id,
+    String? name,
+    Value<String?> profileImg = const Value.absent(),
+    DateTime? createAt,
+    DateTime? updateAt,
+  }) => User(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    profileImg: profileImg.present ? profileImg.value : this.profileImg,
+    createAt: createAt ?? this.createAt,
+    updateAt: updateAt ?? this.updateAt,
+  );
+  User copyWithCompanion(UsersCompanion data) {
+    return User(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      profileImg: data.profileImg.present
+          ? data.profileImg.value
+          : this.profileImg,
+      createAt: data.createAt.present ? data.createAt.value : this.createAt,
+      updateAt: data.updateAt.present ? data.updateAt.value : this.updateAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('User(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('profileImg: $profileImg, ')
+          ..write('createAt: $createAt, ')
+          ..write('updateAt: $updateAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, profileImg, createAt, updateAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is User &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.profileImg == this.profileImg &&
+          other.createAt == this.createAt &&
+          other.updateAt == this.updateAt);
+}
+
+class UsersCompanion extends UpdateCompanion<User> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String?> profileImg;
+  final Value<DateTime> createAt;
+  final Value<DateTime> updateAt;
+  const UsersCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.profileImg = const Value.absent(),
+    this.createAt = const Value.absent(),
+    this.updateAt = const Value.absent(),
+  });
+  UsersCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.profileImg = const Value.absent(),
+    this.createAt = const Value.absent(),
+    this.updateAt = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<User> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? profileImg,
+    Expression<DateTime>? createAt,
+    Expression<DateTime>? updateAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (profileImg != null) 'profile_img': profileImg,
+      if (createAt != null) 'create_at': createAt,
+      if (updateAt != null) 'update_at': updateAt,
+    });
+  }
+
+  UsersCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String?>? profileImg,
+    Value<DateTime>? createAt,
+    Value<DateTime>? updateAt,
+  }) {
+    return UsersCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      profileImg: profileImg ?? this.profileImg,
+      createAt: createAt ?? this.createAt,
+      updateAt: updateAt ?? this.updateAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (profileImg.present) {
+      map['profile_img'] = Variable<String>(profileImg.value);
+    }
+    if (createAt.present) {
+      map['create_at'] = Variable<DateTime>(createAt.value);
+    }
+    if (updateAt.present) {
+      map['update_at'] = Variable<DateTime>(updateAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('profileImg: $profileImg, ')
+          ..write('createAt: $createAt, ')
+          ..write('updateAt: $updateAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $TodoTable todo = $TodoTable(this);
+  late final $TodosTable todos = $TodosTable(this);
   late final $TagsTable tags = $TagsTable(this);
   late final $TodoTagsTable todoTags = $TodoTagsTable(this);
+  late final $UsersTable users = $UsersTable(this);
   late final TodoDao todoDao = TodoDao(this as AppDatabase);
   late final TagDao tagDao = TagDao(this as AppDatabase);
+  late final UserDao userDao = UserDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [todo, tags, todoTags];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    todos,
+    tags,
+    todoTags,
+    users,
+  ];
 }
 
-typedef $$TodoTableCreateCompanionBuilder =
-    TodoCompanion Function({
+typedef $$TodosTableCreateCompanionBuilder =
+    TodosCompanion Function({
       Value<int> id,
       required String title,
       Value<String?> todoImg,
@@ -875,8 +1230,8 @@ typedef $$TodoTableCreateCompanionBuilder =
       Value<DateTime> createAt,
       Value<DateTime> updateAt,
     });
-typedef $$TodoTableUpdateCompanionBuilder =
-    TodoCompanion Function({
+typedef $$TodosTableUpdateCompanionBuilder =
+    TodosCompanion Function({
       Value<int> id,
       Value<String> title,
       Value<String?> todoImg,
@@ -886,15 +1241,15 @@ typedef $$TodoTableUpdateCompanionBuilder =
       Value<DateTime> updateAt,
     });
 
-final class $$TodoTableReferences
-    extends BaseReferences<_$AppDatabase, $TodoTable, TodoData> {
-  $$TodoTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$TodosTableReferences
+    extends BaseReferences<_$AppDatabase, $TodosTable, Todo> {
+  $$TodosTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<$TodoTagsTable, List<TodoTag>> _todoTagsRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
     db.todoTags,
-    aliasName: $_aliasNameGenerator(db.todo.id, db.todoTags.todoId),
+    aliasName: $_aliasNameGenerator(db.todos.id, db.todoTags.todoId),
   );
 
   $$TodoTagsTableProcessedTableManager get todoTagsRefs {
@@ -910,8 +1265,8 @@ final class $$TodoTableReferences
   }
 }
 
-class $$TodoTableFilterComposer extends Composer<_$AppDatabase, $TodoTable> {
-  $$TodoTableFilterComposer({
+class $$TodosTableFilterComposer extends Composer<_$AppDatabase, $TodosTable> {
+  $$TodosTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -980,8 +1335,9 @@ class $$TodoTableFilterComposer extends Composer<_$AppDatabase, $TodoTable> {
   }
 }
 
-class $$TodoTableOrderingComposer extends Composer<_$AppDatabase, $TodoTable> {
-  $$TodoTableOrderingComposer({
+class $$TodosTableOrderingComposer
+    extends Composer<_$AppDatabase, $TodosTable> {
+  $$TodosTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1024,9 +1380,9 @@ class $$TodoTableOrderingComposer extends Composer<_$AppDatabase, $TodoTable> {
   );
 }
 
-class $$TodoTableAnnotationComposer
-    extends Composer<_$AppDatabase, $TodoTable> {
-  $$TodoTableAnnotationComposer({
+class $$TodosTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TodosTable> {
+  $$TodosTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1080,32 +1436,32 @@ class $$TodoTableAnnotationComposer
   }
 }
 
-class $$TodoTableTableManager
+class $$TodosTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $TodoTable,
-          TodoData,
-          $$TodoTableFilterComposer,
-          $$TodoTableOrderingComposer,
-          $$TodoTableAnnotationComposer,
-          $$TodoTableCreateCompanionBuilder,
-          $$TodoTableUpdateCompanionBuilder,
-          (TodoData, $$TodoTableReferences),
-          TodoData,
+          $TodosTable,
+          Todo,
+          $$TodosTableFilterComposer,
+          $$TodosTableOrderingComposer,
+          $$TodosTableAnnotationComposer,
+          $$TodosTableCreateCompanionBuilder,
+          $$TodosTableUpdateCompanionBuilder,
+          (Todo, $$TodosTableReferences),
+          Todo,
           PrefetchHooks Function({bool todoTagsRefs})
         > {
-  $$TodoTableTableManager(_$AppDatabase db, $TodoTable table)
+  $$TodosTableTableManager(_$AppDatabase db, $TodosTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$TodoTableFilterComposer($db: db, $table: table),
+              $$TodosTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$TodoTableOrderingComposer($db: db, $table: table),
+              $$TodosTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$TodoTableAnnotationComposer($db: db, $table: table),
+              $$TodosTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -1115,7 +1471,7 @@ class $$TodoTableTableManager
                 Value<DateTime?> dueDate = const Value.absent(),
                 Value<DateTime> createAt = const Value.absent(),
                 Value<DateTime> updateAt = const Value.absent(),
-              }) => TodoCompanion(
+              }) => TodosCompanion(
                 id: id,
                 title: title,
                 todoImg: todoImg,
@@ -1133,7 +1489,7 @@ class $$TodoTableTableManager
                 Value<DateTime?> dueDate = const Value.absent(),
                 Value<DateTime> createAt = const Value.absent(),
                 Value<DateTime> updateAt = const Value.absent(),
-              }) => TodoCompanion.insert(
+              }) => TodosCompanion.insert(
                 id: id,
                 title: title,
                 todoImg: todoImg,
@@ -1145,7 +1501,7 @@ class $$TodoTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) =>
-                    (e.readTable(table), $$TodoTableReferences(db, table, e)),
+                    (e.readTable(table), $$TodosTableReferences(db, table, e)),
               )
               .toList(),
           prefetchHooksCallback: ({todoTagsRefs = false}) {
@@ -1156,13 +1512,12 @@ class $$TodoTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (todoTagsRefs)
-                    await $_getPrefetchedData<TodoData, $TodoTable, TodoTag>(
+                    await $_getPrefetchedData<Todo, $TodosTable, TodoTag>(
                       currentTable: table,
-                      referencedTable: $$TodoTableReferences._todoTagsRefsTable(
-                        db,
-                      ),
+                      referencedTable: $$TodosTableReferences
+                          ._todoTagsRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$TodoTableReferences(db, table, p0).todoTagsRefs,
+                          $$TodosTableReferences(db, table, p0).todoTagsRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.todoId == item.id),
                       typedResults: items,
@@ -1175,18 +1530,18 @@ class $$TodoTableTableManager
       );
 }
 
-typedef $$TodoTableProcessedTableManager =
+typedef $$TodosTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $TodoTable,
-      TodoData,
-      $$TodoTableFilterComposer,
-      $$TodoTableOrderingComposer,
-      $$TodoTableAnnotationComposer,
-      $$TodoTableCreateCompanionBuilder,
-      $$TodoTableUpdateCompanionBuilder,
-      (TodoData, $$TodoTableReferences),
-      TodoData,
+      $TodosTable,
+      Todo,
+      $$TodosTableFilterComposer,
+      $$TodosTableOrderingComposer,
+      $$TodosTableAnnotationComposer,
+      $$TodosTableCreateCompanionBuilder,
+      $$TodosTableUpdateCompanionBuilder,
+      (Todo, $$TodosTableReferences),
+      Todo,
       PrefetchHooks Function({bool todoTagsRefs})
     >;
 typedef $$TagsTableCreateCompanionBuilder =
@@ -1420,15 +1775,16 @@ final class $$TodoTagsTableReferences
     extends BaseReferences<_$AppDatabase, $TodoTagsTable, TodoTag> {
   $$TodoTagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $TodoTable _todoIdTable(_$AppDatabase db) =>
-      db.todo.createAlias($_aliasNameGenerator(db.todoTags.todoId, db.todo.id));
+  static $TodosTable _todoIdTable(_$AppDatabase db) => db.todos.createAlias(
+    $_aliasNameGenerator(db.todoTags.todoId, db.todos.id),
+  );
 
-  $$TodoTableProcessedTableManager get todoId {
+  $$TodosTableProcessedTableManager get todoId {
     final $_column = $_itemColumn<int>('todo_id')!;
 
-    final manager = $$TodoTableTableManager(
+    final manager = $$TodosTableTableManager(
       $_db,
-      $_db.todo,
+      $_db.todos,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_todoIdTable($_db));
     if (item == null) return manager;
@@ -1464,20 +1820,20 @@ class $$TodoTagsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$TodoTableFilterComposer get todoId {
-    final $$TodoTableFilterComposer composer = $composerBuilder(
+  $$TodosTableFilterComposer get todoId {
+    final $$TodosTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.todoId,
-      referencedTable: $db.todo,
+      referencedTable: $db.todos,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TodoTableFilterComposer(
+          }) => $$TodosTableFilterComposer(
             $db: $db,
-            $table: $db.todo,
+            $table: $db.todos,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1520,20 +1876,20 @@ class $$TodoTagsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$TodoTableOrderingComposer get todoId {
-    final $$TodoTableOrderingComposer composer = $composerBuilder(
+  $$TodosTableOrderingComposer get todoId {
+    final $$TodosTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.todoId,
-      referencedTable: $db.todo,
+      referencedTable: $db.todos,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TodoTableOrderingComposer(
+          }) => $$TodosTableOrderingComposer(
             $db: $db,
-            $table: $db.todo,
+            $table: $db.todos,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1576,20 +1932,20 @@ class $$TodoTagsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$TodoTableAnnotationComposer get todoId {
-    final $$TodoTableAnnotationComposer composer = $composerBuilder(
+  $$TodosTableAnnotationComposer get todoId {
+    final $$TodosTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.todoId,
-      referencedTable: $db.todo,
+      referencedTable: $db.todos,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TodoTableAnnotationComposer(
+          }) => $$TodosTableAnnotationComposer(
             $db: $db,
-            $table: $db.todo,
+            $table: $db.todos,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1746,12 +2102,204 @@ typedef $$TodoTagsTableProcessedTableManager =
       TodoTag,
       PrefetchHooks Function({bool todoId, bool tagId})
     >;
+typedef $$UsersTableCreateCompanionBuilder =
+    UsersCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<String?> profileImg,
+      Value<DateTime> createAt,
+      Value<DateTime> updateAt,
+    });
+typedef $$UsersTableUpdateCompanionBuilder =
+    UsersCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String?> profileImg,
+      Value<DateTime> createAt,
+      Value<DateTime> updateAt,
+    });
+
+class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profileImg => $composableBuilder(
+    column: $table.profileImg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createAt => $composableBuilder(
+    column: $table.createAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updateAt => $composableBuilder(
+    column: $table.updateAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UsersTableOrderingComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get profileImg => $composableBuilder(
+    column: $table.profileImg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createAt => $composableBuilder(
+    column: $table.createAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updateAt => $composableBuilder(
+    column: $table.updateAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UsersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get profileImg => $composableBuilder(
+    column: $table.profileImg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createAt =>
+      $composableBuilder(column: $table.createAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updateAt =>
+      $composableBuilder(column: $table.updateAt, builder: (column) => column);
+}
+
+class $$UsersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UsersTable,
+          User,
+          $$UsersTableFilterComposer,
+          $$UsersTableOrderingComposer,
+          $$UsersTableAnnotationComposer,
+          $$UsersTableCreateCompanionBuilder,
+          $$UsersTableUpdateCompanionBuilder,
+          (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+          User,
+          PrefetchHooks Function()
+        > {
+  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UsersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UsersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UsersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> profileImg = const Value.absent(),
+                Value<DateTime> createAt = const Value.absent(),
+                Value<DateTime> updateAt = const Value.absent(),
+              }) => UsersCompanion(
+                id: id,
+                name: name,
+                profileImg: profileImg,
+                createAt: createAt,
+                updateAt: updateAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<String?> profileImg = const Value.absent(),
+                Value<DateTime> createAt = const Value.absent(),
+                Value<DateTime> updateAt = const Value.absent(),
+              }) => UsersCompanion.insert(
+                id: id,
+                name: name,
+                profileImg: profileImg,
+                createAt: createAt,
+                updateAt: updateAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UsersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UsersTable,
+      User,
+      $$UsersTableFilterComposer,
+      $$UsersTableOrderingComposer,
+      $$UsersTableAnnotationComposer,
+      $$UsersTableCreateCompanionBuilder,
+      $$UsersTableUpdateCompanionBuilder,
+      (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+      User,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
+  $$TodosTableTableManager get todos =>
+      $$TodosTableTableManager(_db, _db.todos);
   $$TagsTableTableManager get tags => $$TagsTableTableManager(_db, _db.tags);
   $$TodoTagsTableTableManager get todoTags =>
       $$TodoTagsTableTableManager(_db, _db.todoTags);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db, _db.users);
 }

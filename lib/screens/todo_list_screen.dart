@@ -76,7 +76,7 @@ class TodoListScreen extends ConsumerWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, WidgetRef ref, TodoData todo) {
+  void _showDeleteDialog(BuildContext context, WidgetRef ref, Todo todo) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

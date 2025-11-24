@@ -5,8 +5,8 @@ import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/screens/todo_detail_screen.dart';
 
 class TodoList extends StatelessWidget {
-  final List<TodoData> todos;
-  final Function(TodoData todo) onTodoDeleted;
+  final List<Todo> todos;
+  final Function(Todo todo) onTodoDeleted;
 
   const TodoList({super.key, required this.todos, required this.onTodoDeleted});
 
@@ -41,6 +41,8 @@ class TodoList extends StatelessWidget {
                     width: 40,
                     height: 40,
                   )
+                : todo.todoImg!.startsWith('assets/')
+                ? Image.asset(todo.todoImg!, width: 40, height: 40)
                 : Image.file(File(todo.todoImg!), width: 40, height: 40),
 
             title: Text(todo.title),

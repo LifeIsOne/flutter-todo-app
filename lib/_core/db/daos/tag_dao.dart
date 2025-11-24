@@ -6,9 +6,9 @@ import 'package:todo_app/_core/db/tables/todo_tag_tables.dart';
 
 part 'tag_dao.g.dart';
 
-@DriftAccessor(tables: [Tags, TodoTags, Todo])
+@DriftAccessor(tables: [Tags, TodoTags, Todos])
 class TagDao extends DatabaseAccessor<AppDatabase> with _$TagDaoMixin {
-  TagDao(AppDatabase db) : super(db);
+  TagDao(AppDatabase appDb) : super(appDb);
 
   Future<List<Tag>> getAllTags() {
     return select(tags).get();
@@ -64,12 +64,12 @@ class TagDao extends DatabaseAccessor<AppDatabase> with _$TagDaoMixin {
     return rows.map((row) => row.readTable(tags)).toList();
   }
 
-  Future<List<TodoData>> getTodosForTag(int tagId) async {
-    final query = select(todo).join([
-      innerJoin(todoTags, todoTags.todoId.equalsExp(todo.id)),
+  Future<List<Todo>> getTodosForTag(int tagId) async {
+    final query = select(todos).join([
+      innerJoin(todoTags, todoTags.todoId.equalsExp(todos.id)),
     ])..where(todoTags.tagId.equals(tagId));
 
     final rows = await query.get();
-    return rows.map((row) => row.readTable(todo)).toList();
+    return rows.map((row) => row.readTable(todos)).toList();
   }
 }
