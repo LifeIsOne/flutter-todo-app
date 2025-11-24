@@ -91,7 +91,7 @@ class _TodoEditScreenState extends ConsumerState<TodoEditScreen> {
       );
     }
 
-    final updateTodo = TodoCompanion(
+    final updateTodo = TodosCompanion(
       id: Value(widget.todoId),
       title: Value(titleController.text),
       todoImg: Value(imgFile?.path),

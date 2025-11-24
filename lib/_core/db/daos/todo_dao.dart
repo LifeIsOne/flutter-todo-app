@@ -4,35 +4,35 @@ import 'package:todo_app/_core/db/tables/todo_tables.dart';
 
 part 'todo_dao.g.dart';
 
-@DriftAccessor(tables: [Todo])
+@DriftAccessor(tables: [Todos])
 class TodoDao extends DatabaseAccessor<AppDatabase> with _$TodoDaoMixin {
-  TodoDao(AppDatabase AppDb) : super(AppDb);
+  TodoDao(AppDatabase appDb) : super(appDb);
 
-  Future<List<TodoData>> getAllTodos() {
-    return select(todo).get();
+  Future<List<Todo>> getAllTodos() {
+    return select(todos).get();
   }
 
-  Stream<List<TodoData>> watchTodos() {
-    return select(todo).watch();
+  Stream<List<Todo>> watchTodos() {
+    return select(todos).watch();
   }
 
-  Stream<TodoData> watchTodoById(int id) {
-    return (select(todo)..where((t) => t.id.equals(id))).watchSingle();
+  Stream<Todo> watchTodoById(int id) {
+    return (select(todos)..where((t) => t.id.equals(id))).watchSingle();
   }
 
-  Future<TodoData> getTodoById(int id) async {
-    return (select(todo)..where((todo) => todo.id.equals(id))).getSingle();
+  Future<Todo> getTodoById(int id) async {
+    return (select(todos)..where((todo) => todo.id.equals(id))).getSingle();
   }
 
-  Future<int> insertTodo(TodoCompanion data) {
-    return into(todo).insert(data);
+  Future<int> insertTodo(TodosCompanion data) {
+    return into(todos).insert(data);
   }
 
-  Future<bool> updateTodo(TodoCompanion data) {
-    return update(todo).replace(data);
+  Future<bool> updateTodo(TodosCompanion data) {
+    return update(todos).replace(data);
   }
 
   Future<int> deleteTodoById(int id) {
-    return (delete(todo)..where((todo) => todo.id.equals(id))).go();
+    return (delete(todos)..where((todo) => todo.id.equals(id))).go();
   }
 }

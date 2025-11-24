@@ -162,7 +162,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
       );
     }
 
-    final newTodo = TodoCompanion(
+    final newTodo = TodosCompanion(
       title: Value(titleController.text),
       todoImg: Value(imgFile?.path),
       tags: Value(selectedTags),

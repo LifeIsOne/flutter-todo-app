@@ -1,15 +1,15 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:todo_app/_core/db/app_database.dart';
-import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/_core/db/daos/todo_dao.dart';
 import 'package:todo_app/providers/db_provider.dart';
-import 'package:todo_app/repositories/todo_repository.dart';
 
 final todoSearchTermProvider = StateProvider<String>((ref) => '');
 
 final todoSelectedTagProvider = StateProvider<String?>((ref) => null);
 
-final filteredTodoListProvider = Provider<AsyncValue<List<TodoData>>>((ref) {
+final filteredTodoListProvider = Provider<AsyncValue<List<Todo>>>((ref) {
   final todosAsync = ref.watch(todoListProvider);
   final searchTerm = ref.watch(todoSearchTermProvider);
   final selectedTag = ref.watch(todoSelectedTagProvider);
@@ -31,47 +31,37 @@ final filteredTodoListProvider = Provider<AsyncValue<List<TodoData>>>((ref) {
   );
 });
 
-class TodoNotifier extends StateNotifier<List<Todo>> {
-  final TodoRepository todoRepository;
+class TodoController {
+  final TodoDao todoDao;
 
-  TodoNotifier(this.todoRepository) : super(todoRepository.getTodos());
+  TodoController(this.todoDao);
 
-  void add(Todo todo) {
-    final newTodo = Todo(
-      id: state.isEmpty ? 1 : (state.last.id ?? 0) + 1,
-      title: todo.title,
-      todoImg: todo.todoImg,
-      tags: todo.tags,
-      dueDate: todo.dueDate,
-      createAt: todo.createAt,
-      updateAt: todo.updateAt,
+  // Drift Todo 항목 추가
+  Future<void> addTodo({
+    required String title,
+    String? todoImg,
+    List<String> tags = const [],
+    DateTime? dueDate,
+  }) async {
+    final companion = TodosCompanion.insert(
+      title: title,
+      todoImg: Value(todoImg),
+      tags: Value(tags),
+      dueDate: Value(dueDate),
     );
-    state = [...state, newTodo];
+    await todoDao.insertTodo(companion);
   }
 
-  void createTodo(TodoData todo) {
-    final newTodo = TodoData(
-      id: todo.id,
-      title: todo.title,
-      createAt: todo.createAt,
-      updateAt: todo.createAt,
-    );
+  Future<void> deleteTodo(int id) async {
+    await todoDao.deleteTodoById(id);
   }
 
-  void remove(int id) {
-    state = state.where((todo) => todo.id != id).toList();
-  }
-
-  void update(Todo updateTodo) {
-    state = state.map((todo) {
-      if (todo.id == updateTodo.id) {
-        return updateTodo;
-      }
-      return todo;
-    }).toList();
+  Future<void> updateTodo(Todo todo) async {
+    await todoDao.updateTodo(todo.toCompanion(true));
   }
 }
 
-final todoProvider = StateNotifierProvider<TodoNotifier, List<Todo>>((ref) {
-  return TodoNotifier(TodoRepository());
+final todoProvider = Provider<TodoController>((ref) {
+  final dao = ref.watch(todoDaoProvider);
+  return TodoController(dao);
 });

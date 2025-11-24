@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/_core/theme.dart';
-import 'package:todo_app/widgets/app_bottom_nav.dart';
 
 class UserRegScreen extends StatefulWidget {
   const UserRegScreen({super.key});
@@ -27,10 +29,44 @@ class _UserRegScreenState extends State<UserRegScreen> {
     }
   }
 
-  void onSubmit() {
-    print("사용자 등록: $username / $profileImg");
+  Future<void> onSubmit() async {
+    if (username.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            '🤦‍♀️아무것도 입력하지 않으셨습니다!🤷‍♂️',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      );
+      return;
+    }
 
-    Navigator.pop((context));
+    String? savedprofileImg;
+    if (profileImg != null) {
+      try {
+        final appDir = await getApplicationDocumentsDirectory();
+        final fileName = path.basename(profileImg!.path);
+        final savedFile = File(path.join(appDir.path, 'profile_$fileName'));
+
+        await profileImg!.copy(savedFile.path);
+        savedprofileImg = savedFile.path;
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('이미지 저장 중 오류가 발생했습니다: $e')));
+        return;
+      }
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_name', username.trim());
+    if (savedprofileImg != null) {
+      await prefs.setString('user_profile_image_path', savedprofileImg);
+    }
+
+    Navigator.pop(context);
   }
 
   @override
@@ -83,8 +119,6 @@ class _UserRegScreenState extends State<UserRegScreen> {
           ),
         ],
       ),
-
-      bottomNavigationBar: AppBottomNav(),
     );
   }
 }
