@@ -4,6 +4,7 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/providers/db_provider.dart';
@@ -17,8 +18,8 @@ class TodoCreateScreen extends ConsumerStatefulWidget {
 
 class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   final ImagePicker picker = ImagePicker();
-  String title = '';
   File? imgFile;
+  final titleController = TextEditingController();
 
   List<String> tagOptions = ['공부', '운동', '장보기', '중요', '개발'];
   List<String> selectedTags = [];
@@ -26,6 +27,22 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   // Date + Time Picker
   DateTime? dueDate;
   TimeOfDay? dueTime;
+
+  @override
+  void initState() {
+    super.initState();
+
+    SharedPreferences.getInstance().then((prefs) {
+      titleController.text = prefs.getString('temp_todo') ?? '';
+    });
+  }
+
+  // 취소하기 -> 저장
+  Future<void> onCancel() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('temp_todo', titleController.text);
+    Navigator.of(context).pop();
+  }
 
   Future<void> pickDueDate() async {
     final picked = await showDatePicker(
@@ -76,11 +93,10 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     }
   }
 
-  void onSubmit() {
-    // 날짜 + 시간
-    DateTime? SumDue;
+  Future<void> onSubmit() async {
+    DateTime? sumDue;
     if (dueDate != null) {
-      SumDue = DateTime(
+      sumDue = DateTime(
         dueDate!.year,
         dueDate!.month,
         dueDate!.day,
@@ -90,20 +106,19 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     }
 
     final newTodo = TodoCompanion(
-      title: Value(title),
+      title: Value(titleController.text),
       todoImg: Value(imgFile?.path),
       tags: Value(selectedTags),
-      dueDate: Value(SumDue),
+      dueDate: Value(sumDue),
       createAt: Value(DateTime.now()),
       updateAt: Value(DateTime.now()),
     );
 
-    ref.read(todoDaoProvider).insertTodo(newTodo);
+    await ref.read(todoDaoProvider).insertTodo(newTodo);
 
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(builder: (_) => TodoListScreen()),
-    // );
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('temp_todo');
+
     Navigator.of(context).pop();
   }
 
@@ -154,7 +169,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
               Padding(
                 padding: const EdgeInsetsGeometry.symmetric(vertical: 10),
                 child: TextField(
-                  onChanged: (value) => title = value,
+                  onChanged: (value) => titleController.text = value,
                   maxLines: 3,
                   decoration: const InputDecoration(
                     hintText: '할 일 입력하기',
@@ -260,27 +275,54 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
               ),
               const SizedBox(height: 10),
               // 등록버튼
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: onSubmit,
-                  icon: const Icon(Icons.add_circle),
-                  label: const Text('등록하기'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: lightColorScheme.tertiary,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: onCancel,
+                      icon: const Icon(Icons.backspace),
+                      label: const Text('취소하기'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: lightColorScheme.error,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+
+                  const SizedBox(width: 4),
+
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: onSubmit,
+                      icon: const Icon(Icons.add_circle),
+                      label: const Text('등록하기'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: lightColorScheme.tertiary,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
