@@ -30,7 +30,7 @@ class AppDatabase extends _$AppDatabase {
         final user = await into(users).insert(
           UsersCompanion.insert(
             name: '공부',
-            profileImg: Value('assets/images/user/avatar01.png'),
+            profileImg: Value('assets/images/user/avatar00.png'),
           ),
         );
 
