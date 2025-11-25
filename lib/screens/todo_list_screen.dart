@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/_core/db/app_database.dart';
+import 'package:todo_app/main.dart';
 import 'package:todo_app/providers/db_provider.dart';
 import 'package:todo_app/providers/tag_provider.dart';
 import 'package:todo_app/providers/todo_provider.dart';
@@ -21,12 +22,23 @@ class TodoListScreen extends ConsumerWidget {
     final selectedTag = ref.watch(todoSelectedTagProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      appBar: AppBar(
+        title: Text('Todo List'),
+        actions: [
+          Switch(
+            value: MyApp.themeNotifier.value == ThemeMode.light,
+            onChanged: (val) {
+              MyApp.themeNotifier.value = val
+                  ? ThemeMode.light
+                  : ThemeMode.dark;
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const SizedBox(height: 80),
             const Header(), // title, 사용자 이름, 프로필 이미지
             // 검색 바
             TodoSearchBar(

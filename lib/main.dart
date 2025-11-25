@@ -11,15 +11,24 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
+    ThemeMode.light,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Todo App',
-      // TODO : 테마 세부 컬러 수정
-      theme: lightMode,
-      // theme: darkMode,
-      home: TodoListScreen(),
+    return ValueListenableBuilder(
+      valueListenable: themeNotifier,
+      builder: (context, mode, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Todo App',
+          theme: lightMode,
+          darkTheme: darkMode,
+          themeMode: mode,
+          home: TodoListScreen(),
+        );
+      },
     );
   }
 }

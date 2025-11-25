@@ -24,7 +24,7 @@ class Header extends ConsumerWidget {
                     Scaffold(body: Center(child: Text('🤷‍♂️Ops'))),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 data: (user) => Text(
-                  '${user?.name ?? '너'}의',
+                  '${user?.name ?? '당신'}의',
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
