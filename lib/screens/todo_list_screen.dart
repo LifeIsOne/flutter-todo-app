@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/providers/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/_core/db/app_database.dart';
 import 'package:todo_app/main.dart';
@@ -97,6 +98,10 @@ class TodoListScreen extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () async {
+                // todo 삭제 - 화면에서 직접?
+                
+                // TODO : 고도화 AsyncNotifierProvider 방식
+                // await ref.read(todoProvider.notifier).deleteTodoById(todo.id);
                 await ref.read(todoDaoProvider).deleteTodoById(todo.id);
                 Navigator.of(context).pop();
               },

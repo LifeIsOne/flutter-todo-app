@@ -51,7 +51,8 @@ class TodoController {
     );
     await todoDao.insertTodo(companion);
   }
-
+  
+  // todo 삭제
   Future<void> deleteTodo(int id) async {
     await todoDao.deleteTodoById(id);
   }

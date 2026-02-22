@@ -4,7 +4,7 @@
 <br>
 
 ## 🛠️ 기술 스택
-- Fluuter
+- Fluter
 - Riverpod
 - Drift(SQLite DB)
 - 개발 환경 :  iOS Simulator

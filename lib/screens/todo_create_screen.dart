@@ -57,6 +57,7 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                   onPressed: () async {
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.remove('temp_todo');
+                    // 경고창엔 불 필요
                     Navigator.of(context).pop();
                   },
                 ),
@@ -82,6 +83,8 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
 
     if (finalTitle.isNotEmpty) {
       await prefs.setString('temp_todo', titleController.text);
+      // 방어코드 : 비동기 작업중 pop()을 하면 에러가 발생할 수 있음
+      if (!mounted) return;
     }
 
     Navigator.of(context).pop();
@@ -191,7 +194,8 @@ class _TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('temp_todo');
-
+    // 방어코드 : 비동기 작업중 pop()을 하면 에러가 발생할 수 있음
+    if (!mounted) return;
     Navigator.of(context).pop();
   }
 
