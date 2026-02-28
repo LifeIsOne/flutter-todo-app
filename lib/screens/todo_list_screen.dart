@@ -97,8 +97,6 @@ class TodoListScreen extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () async {
-                // todo 삭제 - 화면에서 직접?
-
                 // TODO : 고도화 AsyncNotifierProvider 방식
                 // await ref.read(todoProvider.notifier).deleteTodoById(todo.id);
                 await ref.read(todoDaoProvider).deleteTodoById(todo.id);
