@@ -17,9 +17,26 @@ class UserRegScreen extends ConsumerStatefulWidget {
 class _UserRegScreenState extends ConsumerState<UserRegScreen> {
   final ImagePicker picker = ImagePicker();
   final nameController = TextEditingController();
-
   File? profileImg;
   String username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // ← 추가! 화면 열릴 때 기존 유저 정보 불러오기
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final user = await ref.read(userProvider.future);
+      if (user != null) {
+        nameController.text = user.name;
+        if (user.profileImg != null &&
+            !user.profileImg!.startsWith('assets/')) {
+          setState(() {
+            profileImg = File(user.profileImg!);
+          });
+        }
+      }
+    });
+  }
 
   Future<void> pickProfileImg() async {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
@@ -33,7 +50,7 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
   Future<void> onSubmit() async {
     final username = nameController.text.trim();
 
-    if (username.trim().isEmpty) {
+    if (username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -45,16 +62,23 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
       );
       return;
     }
-    await ref
-        .read(userControllerProvider)
-        .updateUser(
-          name: username,
-          profileImg: profileImg?.path ?? 'assets/images/user/avatar00.png',
-        );
 
-    ref.invalidate(userProvider);
-
-    Navigator.pop(context);
+    try {
+      await ref
+          .read(userControllerProvider)
+          .updateUser(
+            name: username,
+            profileImg: profileImg?.path ?? 'assets/images/user/avatar00.png',
+          );
+      ref.invalidate(userProvider);
+      if (mounted) Navigator.pop(context);
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('업데이트에 실패했습니다!')));
+      }
+    }
   }
 
   @override
@@ -67,15 +91,21 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
           // 사용자 아바타
           GestureDetector(
             onTap: pickProfileImg,
-            child: CircleAvatar(
-              radius: 80,
-              backgroundColor: lightColorScheme.outline,
-              backgroundImage: profileImg == null
-                  ? null
-                  : FileImage(profileImg!),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(40), // ← 둥글기만 조절
               child: profileImg == null
-                  ? const Icon(Icons.person, size: 90)
-                  : null,
+                  ? Container(
+                      width: 160, // ← 크기 고정
+                      height: 160,
+                      color: lightColorScheme.outline,
+                      child: const Icon(Icons.person, size: 90),
+                    )
+                  : Image.file(
+                      profileImg!,
+                      width: 160, // ← 크기 고정
+                      height: 160,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
 
@@ -99,9 +129,19 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: onSubmit,
-                child: const Text(
-                  "등록하기",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.edit),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "등록하기",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -26,7 +26,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
           Scaffold(body: Center(child: Text('🤷‍♂️Ops'))),
       data: (todo) {
         return Scaffold(
-          appBar: AppBar(title: Text('Todo Detail')),
+          appBar: AppBar(title: Text('상세 화면')),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

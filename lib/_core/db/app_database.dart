@@ -27,30 +27,20 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     beforeOpen: (details) async {
       if (details.wasCreated) {
-        final user = await into(users).insert(
+        await into(users).insert(
           UsersCompanion.insert(
             name: '공부',
             profileImg: Value('assets/images/user/avatar00.png'),
           ),
         );
 
-        final tag1Id = await into(
-          tags,
-        ).insert(TagsCompanion.insert(name: '공부'));
-        final tag2Id = await into(
-          tags,
-        ).insert(TagsCompanion.insert(name: '운동'));
-        final tag3Id = await into(
-          tags,
-        ).insert(TagsCompanion.insert(name: '중요'));
-        final tag4Id = await into(
-          tags,
-        ).insert(TagsCompanion.insert(name: '일과'));
-        final tag5Id = await into(
-          tags,
-        ).insert(TagsCompanion.insert(name: '목표'));
+        await into(tags).insert(TagsCompanion.insert(name: '공부'));
+        await into(tags).insert(TagsCompanion.insert(name: '운동'));
+        await into(tags).insert(TagsCompanion.insert(name: '중요'));
+        await into(tags).insert(TagsCompanion.insert(name: '일과'));
+        await into(tags).insert(TagsCompanion.insert(name: '목표'));
 
-        final todo1Id = await into(todos).insert(
+        await into(todos).insert(
           TodosCompanion.insert(
             title: '추상화 인터페이스 비교하기',
             tags: Value(['공부']),
@@ -59,8 +49,7 @@ class AppDatabase extends _$AppDatabase {
             updateAt: Value(DateTime.now()),
           ),
         );
-
-        final todo2Id = await into(todos).insert(
+        await into(todos).insert(
           TodosCompanion.insert(
             title: '뜀 걸음 40분 이상',
             tags: Value(['운동', '일과']),
@@ -69,8 +58,7 @@ class AppDatabase extends _$AppDatabase {
             updateAt: Value(DateTime.now()),
           ),
         );
-
-        final todo3Id = await into(todos).insert(
+        await into(todos).insert(
           TodosCompanion.insert(
             title: '저녁거리 사기',
             tags: Value(['일과']),
@@ -79,8 +67,7 @@ class AppDatabase extends _$AppDatabase {
             updateAt: Value(DateTime.now()),
           ),
         );
-
-        final todo4Id = await into(todos).insert(
+        await into(todos).insert(
           TodosCompanion.insert(
             title: '이비인후과 방문',
             tags: Value(['중요', '일과']),
@@ -89,7 +76,7 @@ class AppDatabase extends _$AppDatabase {
             updateAt: Value(DateTime.now()),
           ),
         );
-        final todo5Id = await into(todos).insert(
+        await into(todos).insert(
           TodosCompanion.insert(
             title: '파일,디렉토리는 스네이크',
             todoImg: Value('assets/images/todo/snake_case.png'),
@@ -99,7 +86,7 @@ class AppDatabase extends _$AppDatabase {
             updateAt: Value(DateTime.now()),
           ),
         );
-        final todo6Id = await into(todos).insert(
+        await into(todos).insert(
           TodosCompanion.insert(
             title: '함수, 변수는 카멜',
             todoImg: Value('assets/images/todo/camel_case.png'),
@@ -109,7 +96,7 @@ class AppDatabase extends _$AppDatabase {
             updateAt: Value(DateTime.now()),
           ),
         );
-        final todo7Id = await into(todos).insert(
+        await into(todos).insert(
           TodosCompanion.insert(
             title: '클래스는 파스칼',
             todoImg: Value('assets/images/todo/pascal.png'),

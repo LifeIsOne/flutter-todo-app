@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/screens/tag_manage_screen.dart';
 
 class SelectTag extends StatelessWidget {
   final List<String> tagOptions;
@@ -19,10 +20,31 @@ class SelectTag extends StatelessWidget {
     Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Tag',
-          textAlign: TextAlign.left,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Text(
+              'Tag',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Spacer(),
+            TextButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TagManageScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.tune, size: 16),
+              label: const Text('관리'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.grey[600],
+                textStyle: const TextStyle(fontSize: 13),
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 10),
         SizedBox(

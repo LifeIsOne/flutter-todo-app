@@ -22,6 +22,25 @@ class TodoFormScreen extends ConsumerStatefulWidget {
 class _TodoFormScreenState extends ConsumerState<TodoFormScreen> {
   final titleController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.todoId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final todo = await ref.read(todoDetailProvider(widget.todoId!).future);
+        titleController.text = todo.title;
+
+        ref
+            .read(todoFormProvider.notifier)
+            .initWithTodo(
+              imgFile: todo.todoImg,
+              selectedTags: todo.tags ?? [],
+              dueDate: todo.dueDate,
+            );
+      });
+    }
+  }
+
   void onSubmit() {
     final formState = ref.read(todoFormProvider);
     final isNewTodo = widget.todoId == null;
@@ -71,14 +90,14 @@ class _TodoFormScreenState extends ConsumerState<TodoFormScreen> {
 
     if (isNewTodo) {
       return Scaffold(
-        appBar: AppBar(title: Text('New Todo')),
+        appBar: AppBar(title: Text('추가하기')),
         body: _buildForm(formState, tagAsync),
       );
     } else {
       final todosAsync = ref.watch(todoDetailProvider(widget.todoId!));
 
       return Scaffold(
-        appBar: AppBar(title: Text('Edit Todo')),
+        appBar: AppBar(title: Text('수정하기')),
         body: todosAsync.when(
           error: (error, stackTrace) =>
               Scaffold(body: Center(child: Text('Ops'))),
@@ -105,37 +124,44 @@ class _TodoFormScreenState extends ConsumerState<TodoFormScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AspectRatio(
-              aspectRatio: 3 / 2,
-              child: formState.imgFile == null
-                  ? Image.asset('assets/images/todo/default.png')
-                  : formState.imgFile!.startsWith('assets/')
-                  ? Image.asset(formState.imgFile!)
-                  : Image.file(File(formState.imgFile!)),
-            ),
-
-            const SizedBox(height: 20),
-
-            ElevatedButton.icon(
-              onPressed: () async {
+            GestureDetector(
+              onTap: () async {
                 await ref.read(todoFormProvider.notifier).pickImg();
               },
-
-              icon: const Icon(Icons.photo_library),
-              label: const Text('사진 변경하기'),
-
-              style: ElevatedButton.styleFrom(
-                // backgroundColor: lightColorScheme.onError,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 3 / 2,
+                    child: formState.imgFile == null
+                        ? Image.asset(
+                            'assets/images/todo/default.png',
+                            fit: BoxFit.cover,
+                          )
+                        : formState.imgFile!.startsWith('assets/')
+                        ? Image.asset(formState.imgFile!, fit: BoxFit.cover)
+                        : Image.file(
+                            File(formState.imgFile!),
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                  // 우측 하단에 카메라 아이콘 힌트
+                  const Positioned(
+                    right: 8,
+                    bottom: 8,
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundColor: Colors.black54,
+                      child: Icon(
+                        Icons.photo_camera,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            SizedBox(height: 20),
             SizedBox(height: 20),
             // 텍스트 필드
             TextField(
