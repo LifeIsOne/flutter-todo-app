@@ -45,6 +45,19 @@ class TodoFormNotifier extends Notifier<TodoFormState> {
   void deleteDueDate() {
     state = state.copyWith(dueDate: null, dueTime: null);
   }
+
+  // 수정화면 form
+  void initWithTodo({
+    String? imgFile,
+    List<String> selectedTags = const [],
+    DateTime? dueDate,
+  }) {
+    state = state.copyWith(
+      imgFile: imgFile,
+      selectedTags: selectedTags,
+      dueDate: dueDate,
+    );
+  }
 }
 
 final todoFormProvider =

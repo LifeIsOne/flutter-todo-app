@@ -22,6 +22,25 @@ class TodoFormScreen extends ConsumerStatefulWidget {
 class _TodoFormScreenState extends ConsumerState<TodoFormScreen> {
   final titleController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.todoId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final todo = await ref.read(todoDetailProvider(widget.todoId!).future);
+        titleController.text = todo.title;
+
+        ref
+            .read(todoFormProvider.notifier)
+            .initWithTodo(
+              imgFile: todo.todoImg,
+              selectedTags: todo.tags ?? [],
+              dueDate: todo.dueDate,
+            );
+      });
+    }
+  }
+
   void onSubmit() {
     final formState = ref.read(todoFormProvider);
     final isNewTodo = widget.todoId == null;
