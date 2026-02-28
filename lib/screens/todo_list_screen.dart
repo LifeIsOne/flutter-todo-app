@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/providers/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/_core/db/app_database.dart';
-import 'package:todo_app/main.dart';
 import 'package:todo_app/providers/db_provider.dart';
+import 'package:todo_app/providers/state_provider.dart';
 import 'package:todo_app/providers/tag_provider.dart';
 import 'package:todo_app/providers/todo_provider.dart';
-import 'package:todo_app/screens/todo_create_screen.dart';
+import 'package:todo_app/screens/todo_form_screen.dart';
 import 'package:todo_app/widgets/header.dart';
 import 'package:todo_app/widgets/select_tag.dart';
 import 'package:todo_app/widgets/todo_list.dart';
@@ -24,15 +23,25 @@ class TodoListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo List'),
+        title: Text('할 일 목록'),
         actions: [
-          Switch(
-            value: MyApp.themeNotifier.value == ThemeMode.light,
-            onChanged: (val) {
-              MyApp.themeNotifier.value = val
-                  ? ThemeMode.light
-                  : ThemeMode.dark;
-            },
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                ref.watch(themeModeProvider) == ThemeMode.light
+                    ? Icons.wb_sunny
+                    : Icons.nightlight,
+              ),
+              Switch(
+                value: ref.watch(themeModeProvider) == ThemeMode.light,
+                onChanged: (val) {
+                  ref.read(themeModeProvider.notifier).state = val
+                      ? ThemeMode.light
+                      : ThemeMode.dark;
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -57,6 +66,7 @@ class TodoListScreen extends ConsumerWidget {
                 });
               },
             ),
+            const SizedBox(height: 10),
             // 리스트 빌드 + 필터
             Expanded(
               child: filteredTodosAsync.when(
@@ -80,7 +90,7 @@ class TodoListScreen extends ConsumerWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const TodoCreateScreen()),
+            MaterialPageRoute(builder: (context) => const TodoFormScreen()),
           );
         },
         child: const Text('+'),
@@ -93,25 +103,23 @@ class TodoListScreen extends ConsumerWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Todo'),
+          title: Text(todo.title),
           content: const Text('삭제하시겠습니까?'),
           actions: [
             TextButton(
               onPressed: () async {
-                // todo 삭제 - 화면에서 직접?
-                
-                // TODO : 고도화 AsyncNotifierProvider 방식
-                // await ref.read(todoProvider.notifier).deleteTodoById(todo.id);
                 await ref.read(todoDaoProvider).deleteTodoById(todo.id);
+
+                if (!context.mounted) return;
                 Navigator.of(context).pop();
               },
-              child: const Text('삭제하기'),
+              child: const Text('삭제하기', style: TextStyle(color: Colors.red)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('취소하기'),
+              child: const Text('취소', style: TextStyle(color: Colors.grey)),
             ),
           ],
         );
