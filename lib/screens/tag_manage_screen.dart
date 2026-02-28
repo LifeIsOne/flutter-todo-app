@@ -73,11 +73,9 @@ class TagManageScreen extends ConsumerWidget {
               ),
               // 태그 목록
               Expanded(
-                child: ListView.separated(
+                child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: tags.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
-                  // prototypeItem: ListTile(title: Text()),
                   itemBuilder: (context, index) {
                     final tag = tags[index];
                     return Container(
@@ -87,6 +85,10 @@ class TagManageScreen extends ConsumerWidget {
                       ),
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       child: ListTile(
+                        leading: const Icon(
+                          Icons.label,
+                          color: Color(0xFF2E81F6),
+                        ),
                         title: Text(tag.name),
                         trailing: IconButton(
                           icon: Icon(
