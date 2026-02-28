@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/providers/db_provider.dart';
 import 'package:todo_app/providers/user_provider.dart';
 
@@ -18,22 +17,32 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
   final ImagePicker picker = ImagePicker();
   final nameController = TextEditingController();
 
-  File? profileImg;
-  String username = '';
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final user = await ref.read(userProvider.future);
+      if (user != null) {
+        nameController.text = user.name;
+        if (user.profileImg != null &&
+            !user.profileImg!.startsWith('assets/')) {
+          ref.read(profileImgProvider.notifier).state = File(user.profileImg!);
+        }
+      }
+    });
+  }
 
   Future<void> pickProfileImg() async {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      setState(() {
-        profileImg = File(picked.path);
-      });
+      ref.read(profileImgProvider.notifier).state = File(picked.path);
     }
   }
 
   Future<void> onSubmit() async {
     final username = nameController.text.trim();
 
-    if (username.trim().isEmpty) {
+    if (username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -45,20 +54,29 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
       );
       return;
     }
-    await ref
-        .read(userControllerProvider)
-        .updateUser(
-          name: username,
-          profileImg: profileImg?.path ?? 'assets/images/user/avatar00.png',
-        );
 
-    ref.invalidate(userProvider);
-
-    Navigator.pop(context);
+    try {
+      await ref
+          .read(userControllerProvider)
+          .updateUser(
+            name: username,
+            profileImg: ref.read(profileImgProvider)?.path,
+          );
+      ref.invalidate(userProvider);
+      if (mounted) Navigator.pop(context);
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('업데이트에 실패했습니다!')));
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final profileImg = ref.watch(profileImgProvider);
+
     return Scaffold(
       appBar: AppBar(title: Text('사용자 정보 등록')),
 
@@ -67,15 +85,21 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
           // 사용자 아바타
           GestureDetector(
             onTap: pickProfileImg,
-            child: CircleAvatar(
-              radius: 80,
-              backgroundColor: lightColorScheme.outline,
-              backgroundImage: profileImg == null
-                  ? null
-                  : FileImage(profileImg!),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(40),
               child: profileImg == null
-                  ? const Icon(Icons.person, size: 90)
-                  : null,
+                  ? Container(
+                      width: 160,
+                      height: 160,
+                      color: Theme.of(context).colorScheme.outline,
+                      child: const Icon(Icons.person, size: 90),
+                    )
+                  : Image.file(
+                      profileImg,
+                      width: 160,
+                      height: 160,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
 
@@ -88,7 +112,6 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
                 labelText: "이름 입력",
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) => username = value,
             ),
           ),
 
@@ -99,9 +122,19 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: onSubmit,
-                child: const Text(
-                  "등록하기",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.edit),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "등록하기",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
