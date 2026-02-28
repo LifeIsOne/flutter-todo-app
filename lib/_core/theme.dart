@@ -47,6 +47,15 @@ ThemeData lightMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
   colorScheme: lightColorScheme,
+
+  appBarTheme: const AppBarTheme(
+    titleTextStyle: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
+      color: Colors.black,
+    ),
+  ),
+  
   cardColor: lightColorScheme.surface,
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(

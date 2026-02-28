@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/providers/db_provider.dart';
-import 'package:todo_app/screens/todo_edit_screen.dart';
+import 'package:todo_app/screens/todo_form_screen.dart';
 
 class TodoDetailScreen extends ConsumerStatefulWidget {
   final int todoId;
@@ -173,7 +173,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              TodoEditScreen(todoId: widget.todoId),
+                              TodoFormScreen(todoId: widget.todoId),
                         ),
                       );
                     },
