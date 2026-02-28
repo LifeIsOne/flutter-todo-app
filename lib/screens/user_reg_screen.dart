@@ -17,8 +17,6 @@ class UserRegScreen extends ConsumerStatefulWidget {
 class _UserRegScreenState extends ConsumerState<UserRegScreen> {
   final ImagePicker picker = ImagePicker();
   final nameController = TextEditingController();
-  File? profileImg;
-  String username = '';
 
   @override
   void initState() {
@@ -30,9 +28,7 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
         nameController.text = user.name;
         if (user.profileImg != null &&
             !user.profileImg!.startsWith('assets/')) {
-          setState(() {
-            profileImg = File(user.profileImg!);
-          });
+          ref.read(profileImgProvider.notifier).state = File(user.profileImg!);
         }
       }
     });
@@ -41,9 +37,7 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
   Future<void> pickProfileImg() async {
     final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      setState(() {
-        profileImg = File(picked.path);
-      });
+      ref.read(profileImgProvider.notifier).state = File(picked.path);
     }
   }
 
@@ -68,7 +62,7 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
           .read(userControllerProvider)
           .updateUser(
             name: username,
-            profileImg: profileImg?.path ?? 'assets/images/user/avatar00.png',
+            profileImg: ref.read(profileImgProvider)?.path,
           );
       ref.invalidate(userProvider);
       if (mounted) Navigator.pop(context);
@@ -83,6 +77,8 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profileImg = ref.watch(profileImgProvider);
+
     return Scaffold(
       appBar: AppBar(title: Text('사용자 정보 등록')),
 
@@ -101,7 +97,7 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
                       child: const Icon(Icons.person, size: 90),
                     )
                   : Image.file(
-                      profileImg!,
+                      profileImg,
                       width: 160, // ← 크기 고정
                       height: 160,
                       fit: BoxFit.cover,
@@ -118,7 +114,6 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
                 labelText: "이름 입력",
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) => username = value,
             ),
           ),
 

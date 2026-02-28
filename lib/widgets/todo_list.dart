@@ -81,13 +81,15 @@ class _TodoListState extends State<TodoList> {
                                 horizontal: 10,
                                 vertical: 4,
                               ),
+
                               decoration: BoxDecoration(
+                                color: Colors.blue,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
                                 tag,
                                 style: TextStyle(
-                                  color: Colors.blue,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
                                 ),

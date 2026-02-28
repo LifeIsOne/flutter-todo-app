@@ -73,9 +73,7 @@ class SelectTag extends StatelessWidget {
         color: isSelected ? Colors.blue : Colors.transparent,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isSelected
-              ? Colors.blue
-              : Colors.grey.withOpacity(.5), // ← 선택 안 된 태그는 grey
+          color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.2),
         ),
       ),
       child: Material(

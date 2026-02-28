@@ -12,10 +12,6 @@ void main() {
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
-    ThemeMode.light,
-  );
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
