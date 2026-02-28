@@ -55,9 +55,7 @@ ThemeData lightMode = ThemeData(
   cardColor: lightColorScheme.surface,
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all<Color>(
-        lightColorScheme.primary, // Slightly darker shade for the button
-      ),
+      backgroundColor: WidgetStateProperty.all<Color>(lightColorScheme.primary),
       foregroundColor: WidgetStateProperty.all<Color>(
         lightColorScheme.onPrimary,
       ),
@@ -78,12 +76,19 @@ ThemeData darkMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
   colorScheme: darkColorScheme,
+
+  appBarTheme: const AppBarTheme(
+    titleTextStyle: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
+      color: Colors.white,
+    ),
+  ),
+
   cardColor: darkColorScheme.surface,
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all<Color>(
-        darkColorScheme.primary, // Slightly darker shade for the button
-      ),
+      backgroundColor: WidgetStateProperty.all<Color>(darkColorScheme.primary),
       foregroundColor: WidgetStateProperty.all<Color>(
         darkColorScheme.onPrimary,
       ),

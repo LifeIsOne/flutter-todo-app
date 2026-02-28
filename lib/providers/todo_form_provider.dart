@@ -50,8 +50,8 @@ class TodoFormNotifier extends Notifier<TodoFormState> {
   }
 
   // dueDate, dueTime 제거
-  void deleteDueDate() {
-    state = state.copyWith(dueDate: null, dueTime: null);
+  void deleteDueDateAndDueTime() {
+    state = state.copyWith(deleteDueDate: true, deleteDueTime: true);
   }
 
   // 수정화면 form

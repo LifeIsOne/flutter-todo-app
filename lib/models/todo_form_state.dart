@@ -55,13 +55,17 @@ class TodoFormState {
     List<String>? selectedTags,
     DateTime? dueDate,
     TimeOfDay? dueTime,
+
+    // 마감일•시간 삭제 플래그
+    bool deleteDueDate = false,
+    bool deleteDueTime = false,
   }) {
     return TodoFormState(
       title: title ?? this.title,
       imgFile: imgFile ?? this.imgFile,
       selectedTags: selectedTags ?? this.selectedTags,
-      dueDate: dueDate ?? this.dueDate,
-      dueTime: dueTime ?? this.dueTime,
+      dueDate: deleteDueDate ? null : dueDate ?? this.dueDate,
+      dueTime: deleteDueTime ? null : dueTime ?? this.dueTime,
     );
   }
 

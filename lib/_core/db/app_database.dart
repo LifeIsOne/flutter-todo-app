@@ -29,7 +29,7 @@ class AppDatabase extends _$AppDatabase {
       if (details.wasCreated) {
         await into(users).insert(
           UsersCompanion.insert(
-            name: '공부',
+            name: '사용자',
             profileImg: Value('assets/images/user/avatar00.png'),
           ),
         );
