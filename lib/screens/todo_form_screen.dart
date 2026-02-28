@@ -251,7 +251,7 @@ class _TodoFormScreenState extends ConsumerState<TodoFormScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.clear, size: 18),
-                  color: lightColorScheme.error,
+                  color: Theme.of(context).colorScheme.error,
                   onPressed: () {
                     ref
                         .read(todoFormProvider.notifier)
