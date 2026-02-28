@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:todo_app/_core/db/app_database.dart';
-import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/screens/todo_detail_screen.dart';
 
 class TodoList extends StatefulWidget {
@@ -28,7 +27,7 @@ class _TodoListState extends State<TodoList> {
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: lightColorScheme.outline, width: 1),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
             boxShadow: [
               const BoxShadow(
                 color: Color(0x11000000),

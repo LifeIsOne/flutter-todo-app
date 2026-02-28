@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:todo_app/_core/theme.dart';
 import 'package:todo_app/providers/db_provider.dart';
 import 'package:todo_app/providers/user_provider.dart';
 
@@ -21,7 +20,6 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
   @override
   void initState() {
     super.initState();
-    // ← 추가! 화면 열릴 때 기존 유저 정보 불러오기
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final user = await ref.read(userProvider.future);
       if (user != null) {
@@ -88,17 +86,17 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
           GestureDetector(
             onTap: pickProfileImg,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(40), // ← 둥글기만 조절
+              borderRadius: BorderRadius.circular(40),
               child: profileImg == null
                   ? Container(
-                      width: 160, // ← 크기 고정
+                      width: 160,
                       height: 160,
-                      color: lightColorScheme.outline,
+                      color: Theme.of(context).colorScheme.outline,
                       child: const Icon(Icons.person, size: 90),
                     )
                   : Image.file(
                       profileImg,
-                      width: 160, // ← 크기 고정
+                      width: 160,
                       height: 160,
                       fit: BoxFit.cover,
                     ),

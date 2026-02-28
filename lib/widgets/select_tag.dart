@@ -89,8 +89,8 @@ class SelectTag extends StatelessWidget {
                 color: isSelected
                     ? Colors.white
                     : isDark
-                    ? Colors.grey[300] // ← 다크모드 텍스트
-                    : Colors.blue, // ← 라이트모드 텍스트
+                    ? Colors.white
+                    : Colors.blue,
                 fontWeight: FontWeight.bold,
                 fontSize: 13,
               ),
