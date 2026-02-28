@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/models/todo_form_state.dart';
 
 class TodoFormNotifier extends Notifier<TodoFormState> {
@@ -15,7 +16,14 @@ class TodoFormNotifier extends Notifier<TodoFormState> {
 
   // imgFile 변경
   Future<void> pickImg() async {
-    // TODO : 나중에 작성
+    final picker = ImagePicker();
+    final XFile? formImgFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (formImgFile != null) {
+      state = state.copyWith(imgFile: formImgFile.path);
+    }
   }
 
   // tag 토글
