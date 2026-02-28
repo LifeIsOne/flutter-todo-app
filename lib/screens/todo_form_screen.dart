@@ -71,14 +71,14 @@ class _TodoFormScreenState extends ConsumerState<TodoFormScreen> {
 
     if (isNewTodo) {
       return Scaffold(
-        appBar: AppBar(title: Text('New Todo')),
+        appBar: AppBar(title: Text('추가하기')),
         body: _buildForm(formState, tagAsync),
       );
     } else {
       final todosAsync = ref.watch(todoDetailProvider(widget.todoId!));
 
       return Scaffold(
-        appBar: AppBar(title: Text('Edit Todo')),
+        appBar: AppBar(title: Text('수정하기')),
         body: todosAsync.when(
           error: (error, stackTrace) =>
               Scaffold(body: Center(child: Text('Ops'))),

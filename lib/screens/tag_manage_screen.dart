@@ -22,50 +22,82 @@ class TagManageScreen extends ConsumerWidget {
             children: [
               // 태그 추가
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Row(
                   children: [
                     Expanded(
                       child: TextField(
                         controller: textController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: '새로운 태그',
-                          border: OutlineInputBorder(),
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        final name = textController.text.trim();
-                        if (name.isEmpty) return;
-                        ref
-                            .read(tagDaoProvider)
-                            .insertTag(TagsCompanion.insert(name: name));
-                        textController.clear();
-                      },
-                      child: const Text('추가'),
+                    SizedBox(
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final name = textController.text.trim();
+                          if (name.isEmpty) return;
+                          ref
+                              .read(tagDaoProvider)
+                              .insertTag(TagsCompanion.insert(name: name));
+                          textController.clear();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text('추가'),
+                      ),
                     ),
                   ],
                 ),
               ),
               // 태그 목록
               Expanded(
-                child: ListView.builder(
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: tags.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1),
                   // prototypeItem: ListTile(title: Text()),
                   itemBuilder: (context, index) {
                     final tag = tags[index];
-                    return ListTile(
-                      title: Text(tag.name),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.close_outlined,
-                          color: Color(0xFFFF4B6E),
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[300]!),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      child: ListTile(
+                        title: Text(tag.name),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            size: 30,
+                            color: Color(0xFFFF4B6E),
+                          ),
+                          onPressed: () {
+                            ref.read(tagDaoProvider).deleteTag(tag.id);
+                          },
                         ),
-                        onPressed: () {
-                          ref.read(tagDaoProvider).deleteTag(tag.id);
-                        },
                       ),
                     );
                   },

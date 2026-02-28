@@ -23,7 +23,7 @@ class TodoListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo List'),
+        title: Text('할 일 목록'),
         actions: [
           Switch(
             value: ref.watch(themeModeProvider) == ThemeMode.light,
@@ -56,6 +56,7 @@ class TodoListScreen extends ConsumerWidget {
                 });
               },
             ),
+            const SizedBox(height: 10),
             // 리스트 빌드 + 필터
             Expanded(
               child: filteredTodosAsync.when(
