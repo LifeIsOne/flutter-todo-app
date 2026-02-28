@@ -15,9 +15,7 @@ class SelectTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-    // color: Colors.red,
-    Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -56,7 +54,7 @@ class SelectTag extends StatelessWidget {
                 final isSelected = selectedTag == tag;
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: _buildTagButton(tag, isSelected),
+                  child: _buildTagButton(context, tag, isSelected),
                 );
               }).toList(),
             ),
@@ -66,30 +64,37 @@ class SelectTag extends StatelessWidget {
     );
   }
 
-  Widget _buildTagButton(String tag, bool isSelected) {
+  Widget _buildTagButton(BuildContext context, String tag, bool isSelected) {
+    // Theme에서 다크/라이트 자동 감지
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: isSelected ? Colors.blue : Colors.white,
+        color: isSelected ? Colors.blue : Colors.transparent,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.blue),
+        border: Border.all(
+          color: isSelected
+              ? Colors.blue
+              : Colors.grey.withOpacity(.5), // ← 선택 안 된 태그는 grey
+        ),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(24),
-          onTap: () {
-            onTagSelected(tag); // setState 대신 콜백 함수 호출
-          },
+          onTap: () => onTagSelected(tag),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-            child: Center(
-              child: Text(
-                tag,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                ),
+            child: Text(
+              tag,
+              style: TextStyle(
+                color: isSelected
+                    ? Colors.white
+                    : isDark
+                    ? Colors.grey[300] // ← 다크모드 텍스트
+                    : Colors.blue, // ← 라이트모드 텍스트
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
               ),
             ),
           ),

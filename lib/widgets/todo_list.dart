@@ -27,7 +27,6 @@ class _TodoListState extends State<TodoList> {
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            // color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: lightColorScheme.outline, width: 1),
             boxShadow: [
@@ -83,7 +82,6 @@ class _TodoListState extends State<TodoList> {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.blue.shade50,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(

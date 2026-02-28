@@ -25,13 +25,23 @@ class TodoListScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text('할 일 목록'),
         actions: [
-          Switch(
-            value: ref.watch(themeModeProvider) == ThemeMode.light,
-            onChanged: (val) {
-              ref.read(themeModeProvider.notifier).state = val
-                  ? ThemeMode.light
-                  : ThemeMode.dark;
-            },
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                ref.watch(themeModeProvider) == ThemeMode.light
+                    ? Icons.wb_sunny
+                    : Icons.nightlight,
+              ),
+              Switch(
+                value: ref.watch(themeModeProvider) == ThemeMode.light,
+                onChanged: (val) {
+                  ref.read(themeModeProvider.notifier).state = val
+                      ? ThemeMode.light
+                      : ThemeMode.dark;
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -93,25 +103,23 @@ class TodoListScreen extends ConsumerWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Todo'),
+          title: Text(todo.title),
           content: const Text('삭제하시겠습니까?'),
           actions: [
             TextButton(
               onPressed: () async {
-                // TODO : 고도화 AsyncNotifierProvider 방식
-                // await ref.read(todoProvider.notifier).deleteTodoById(todo.id);
                 await ref.read(todoDaoProvider).deleteTodoById(todo.id);
 
                 if (!context.mounted) return;
                 Navigator.of(context).pop();
               },
-              child: const Text('삭제하기'),
+              child: const Text('삭제하기', style: TextStyle(color: Colors.red)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('취소하기'),
+              child: const Text('취소', style: TextStyle(color: Colors.grey)),
             ),
           ],
         );
