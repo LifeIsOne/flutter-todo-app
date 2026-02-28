@@ -12,13 +12,11 @@ const lightColorScheme = ColorScheme(
   onTertiary: Color(0xFFFFFFFF),
   error: Color(0xFFFF4B6E),
   onError: Color(0xFFFFFFFF),
-  background: Color(0xFFF7F9FC),
-  onBackground: Color(0xFF1A1C18),
   shadow: Color(0xFF000000),
   outline: Color(0xFFE0E3E7),
   outlineVariant: Color(0xFFF1F3F5),
-  surface: Color(0xFFFFFFFF),
-  surfaceTint: Color(0xFF0E61F6),
+  surface: Color(0xFFF7F9FC),
+  surfaceTint: Color(0xFF1A1C18),
   onSurface: Color(0xFF1A1C18),
 );
 /* ✅다크 모드 */
@@ -32,8 +30,6 @@ const darkColorScheme = ColorScheme(
   onTertiary: Colors.black,
   error: Color(0xFFEF9A9A),
   onError: Colors.black,
-  background: Color(0xFF121212),
-  onBackground: Color(0xFFE0E0E0),
   // 텍스트
   surface: Color(0xFF1D1D1D),
   // ListTile, Card
@@ -55,23 +51,23 @@ ThemeData lightMode = ThemeData(
       color: Colors.black,
     ),
   ),
-  
+
   cardColor: lightColorScheme.surface,
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(
+      backgroundColor: WidgetStateProperty.all<Color>(
         lightColorScheme.primary, // Slightly darker shade for the button
       ),
-      foregroundColor: MaterialStateProperty.all<Color>(
+      foregroundColor: WidgetStateProperty.all<Color>(
         lightColorScheme.onPrimary,
       ),
       // text color
-      elevation: MaterialStateProperty.all<double>(5.0),
+      elevation: WidgetStateProperty.all<double>(5.0),
       // shadow
-      padding: MaterialStateProperty.all<EdgeInsets>(
+      padding: WidgetStateProperty.all<EdgeInsets>(
         const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       ),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     ),
@@ -85,10 +81,10 @@ ThemeData darkMode = ThemeData(
   cardColor: darkColorScheme.surface,
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(
+      backgroundColor: WidgetStateProperty.all<Color>(
         darkColorScheme.primary, // Slightly darker shade for the button
       ),
-      foregroundColor: MaterialStateProperty.all<Color>(
+      foregroundColor: WidgetStateProperty.all<Color>(
         darkColorScheme.onPrimary,
       ),
     ),

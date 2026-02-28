@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/_core/db/app_database.dart';
-import 'package:todo_app/main.dart';
 import 'package:todo_app/providers/db_provider.dart';
+import 'package:todo_app/providers/state_provider.dart';
 import 'package:todo_app/providers/tag_provider.dart';
 import 'package:todo_app/providers/todo_provider.dart';
 import 'package:todo_app/screens/todo_form_screen.dart';
@@ -26,9 +26,9 @@ class TodoListScreen extends ConsumerWidget {
         title: Text('Todo List'),
         actions: [
           Switch(
-            value: MyApp.themeNotifier.value == ThemeMode.light,
+            value: ref.watch(themeModeProvider) == ThemeMode.light,
             onChanged: (val) {
-              MyApp.themeNotifier.value = val
+              ref.read(themeModeProvider.notifier).state = val
                   ? ThemeMode.light
                   : ThemeMode.dark;
             },
@@ -102,6 +102,8 @@ class TodoListScreen extends ConsumerWidget {
                 // TODO : 고도화 AsyncNotifierProvider 방식
                 // await ref.read(todoProvider.notifier).deleteTodoById(todo.id);
                 await ref.read(todoDaoProvider).deleteTodoById(todo.id);
+
+                if (!context.mounted) return;
                 Navigator.of(context).pop();
               },
               child: const Text('삭제하기'),

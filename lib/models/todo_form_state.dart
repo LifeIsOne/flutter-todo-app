@@ -37,15 +37,15 @@ class TodoFormState {
       dueDate.hashCode ^
       dueTime.hashCode;
 
-  // toString 
+  // toString
   @override
   String toString() {
-    return 'TodoFormState{' +
-        ' title: $title,' +
-        ' imgFile: $imgFile,' +
-        ' selectedTags: $selectedTags,' +
-        ' dueDate: $dueDate,' +
-        ' dueTime: $dueTime,' +
+    return 'TodoFormState{'
+        ' title: $title,'
+        ' imgFile: $imgFile,'
+        ' selectedTags: $selectedTags,'
+        ' dueDate: $dueDate,'
+        ' dueTime: $dueTime,'
         '}';
   }
 
@@ -68,11 +68,11 @@ class TodoFormState {
   // 데이터를 JSON 형태로 바꾸고, SharedPreferences에 저장할 때 변환 도구
   Map<String, dynamic> toMap() {
     return {
-      'title': this.title,
-      'imgFile': this.imgFile,
-      'selectedTags': this.selectedTags,
-      'dueDate': this.dueDate,
-      'dueTime': this.dueTime,
+      'title': title,
+      'imgFile': imgFile,
+      'selectedTags': selectedTags,
+      'dueDate': dueDate,
+      'dueTime': dueTime,
     };
   }
 

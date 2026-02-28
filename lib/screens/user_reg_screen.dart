@@ -33,7 +33,7 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
   Future<void> onSubmit() async {
     final username = nameController.text.trim();
 
-    if (username.trim().isEmpty) {
+    if (username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -45,16 +45,23 @@ class _UserRegScreenState extends ConsumerState<UserRegScreen> {
       );
       return;
     }
-    await ref
-        .read(userControllerProvider)
-        .updateUser(
-          name: username,
-          profileImg: profileImg?.path ?? 'assets/images/user/avatar00.png',
-        );
 
-    ref.invalidate(userProvider);
-
-    Navigator.pop(context);
+    try {
+      await ref
+          .read(userControllerProvider)
+          .updateUser(
+            name: username,
+            profileImg: profileImg?.path ?? 'assets/images/user/avatar00.png',
+          );
+      ref.invalidate(userProvider);
+      if (mounted) Navigator.pop(context);
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('업데이트에 실패했습니다!')));
+      }
+    }
   }
 
   @override

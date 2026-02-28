@@ -26,7 +26,7 @@ class _TodoSearchBarState extends ConsumerState<TodoSearchBar> {
       // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Container(
+          child: SizedBox(
             // width: MediaQuery.of(context).size.width * 0.8, // Removed, Expanded handles this
             height: 64,
             // color: Colors.redAccent,

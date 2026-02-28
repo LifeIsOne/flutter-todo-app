@@ -52,7 +52,7 @@ class Header extends ConsumerWidget {
               MaterialPageRoute(builder: (context) => UserRegScreen()),
             );
           },
-          child: Container(
+          child: SizedBox(
             width: 60,
             height: 60,
             child: ClipRRect(
